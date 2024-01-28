@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shaparak/constans/color.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 6.0),
                     decoration: const BoxDecoration(
-                      color: Colors.amber,
+                      color: CustomColors.gery,
                     ),
                     child: Center(
                       child: Text('${index + 1}'),
@@ -42,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 controller: bannerController,
                 count: 3,
                 effect: const ExpandingDotsEffect(
-                  activeDotColor: Colors.blueAccent,
-                  dotColor: Colors.white,
+                  activeDotColor: CustomColors.blueIndicator,
+                  dotColor: CustomColors.white,
                   expansionFactor: 4.0,
                   dotHeight: 9.0,
                   dotWidth: 9.0,
