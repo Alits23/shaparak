@@ -22,7 +22,7 @@ class BannerSlider extends StatelessWidget {
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 decoration: const BoxDecoration(
-                  color: CustomColors.gery,
+                  color: CustomColors.green,
                 ),
                 child: Center(
                   child: Text('${index + 1}'),

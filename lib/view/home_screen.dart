@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
+            AppBar(),
             BannersList(),
             CategoryListTitle(),
             CategoryList(),
@@ -27,6 +28,58 @@ class _HomeScreenState extends State<HomeScreen> {
             BestSellerTitle(),
             BestSellerProductList(),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class AppBar extends StatelessWidget {
+  const AppBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(
+            right: 44.0, left: 44.0, bottom: 32.0, top: 5.0),
+        child: Container(
+          height: 56.0,
+          decoration: BoxDecoration(
+            color: CustomColors.white,
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 16.0,
+              ),
+              Image.asset('assets/images/icon_apple_blue.png'),
+              const SizedBox(
+                width: 10.0,
+              ),
+              const Expanded(
+                child: Text(
+                  'جستجوی محصولات',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    fontFamily: 'sb',
+                    color: CustomColors.gery,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10.0,
+              ),
+              Image.asset('assets/images/icon_search.png'),
+              const SizedBox(
+                width: 16.0,
+              ),
+            ],
+          ),
         ),
       ),
     );

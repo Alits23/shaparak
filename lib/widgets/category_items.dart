@@ -32,9 +32,16 @@ class CategoryItems extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 5.0,
+          height: 10.0,
         ),
-        const Text('مک بوک'),
+        const Text(
+          'اپل واچ',
+          style: TextStyle(
+            fontFamily: 'sb',
+            fontSize: 14,
+            color: Colors.black,
+          ),
+        ),
       ],
     );
   }
