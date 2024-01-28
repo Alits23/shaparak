@@ -16,17 +16,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
-      body: CustomScrollView(
-        slivers: [
-          AppBar(),
-          BannersList(),
-          CategoryListTitle(),
-          CategoryList(),
-          MostViewTitle(),
-          MostViewProductList(),
-          BestSellerTitle(),
-          BestSellerProductList(),
-        ],
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            AppBar(),
+            BannersList(),
+            CategoryListTitle(),
+            CategoryList(),
+            MostViewTitle(),
+            MostViewProductList(),
+            BestSellerTitle(),
+            BestSellerProductList(),
+          ],
+        ),
       ),
     );
   }
