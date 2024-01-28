@@ -5,6 +5,7 @@ import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/view/category_screen.dart';
 import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
+import 'package:shaparak/view/profile_screen.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -14,16 +15,17 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int selectedIndex = 1;
+  int selectedIndex = 3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
         children: const [
+          ProfileScreen(),
           Categoryscreen(),
-          HomeScreen(),
           ProductListScreen(),
+          HomeScreen(),
         ],
       ),
       bottomNavigationBar: ClipRRect(
@@ -36,7 +38,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             elevation: 0.0,
             selectedLabelStyle: const TextStyle(
               fontFamily: 'sb',
-              fontSize: 10.0,
+              fontSize: 12.0,
               color: CustomColors.blue,
             ),
             unselectedLabelStyle: const TextStyle(
@@ -50,6 +52,25 @@ class _BottomNavigationState extends State<BottomNavigation> {
               });
             },
             items: [
+              // 0
+              BottomNavigationBarItem(
+                icon: Container(
+                  child: Image.asset('assets/images/icon_profile.png'),
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: CustomColors.blueIndicator,
+                        blurRadius: 20.0,
+                        spreadRadius: -7.0,
+                        offset: Offset(0.0, 13.0),
+                      ),
+                    ],
+                  ),
+                ),
+                activeIcon:
+                    Image.asset('assets/images/icon_profile_active.png'),
+                label: 'پروفایل',
+              ),
               // 1
               BottomNavigationBarItem(
                 icon: Container(
@@ -72,24 +93,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
               // 2
               BottomNavigationBarItem(
                 icon: Container(
-                  child: Image.asset('assets/images/icon_home.png'),
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: CustomColors.blueIndicator,
-                        blurRadius: 20.0,
-                        spreadRadius: -7.0,
-                        offset: Offset(0.0, 13.0),
-                      ),
-                    ],
-                  ),
-                ),
-                activeIcon: Image.asset('assets/images/icon_home_active.png'),
-                label: 'صفحه اصلی',
-              ),
-              // 3
-              BottomNavigationBarItem(
-                icon: Container(
                   child: Image.asset('assets/images/icon_basket.png'),
                   decoration: const BoxDecoration(
                     boxShadow: [
@@ -104,6 +107,24 @@ class _BottomNavigationState extends State<BottomNavigation> {
                 ),
                 activeIcon: Image.asset('assets/images/icon_basket_active.png'),
                 label: 'پرفروش ترین ها',
+              ),
+              // 3
+              BottomNavigationBarItem(
+                icon: Container(
+                  child: Image.asset('assets/images/icon_home.png'),
+                  decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: CustomColors.blueIndicator,
+                        blurRadius: 20.0,
+                        spreadRadius: -7.0,
+                        offset: Offset(0.0, 13.0),
+                      ),
+                    ],
+                  ),
+                ),
+                activeIcon: Image.asset('assets/images/icon_home_active.png'),
+                label: 'صفحه اصلی',
               ),
             ],
           ),
