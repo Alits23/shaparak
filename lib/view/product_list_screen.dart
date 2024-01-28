@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:shaparak/widgets/product_container.dart';
 
 import '../constans/color.dart';
 
-class Categoryscreen extends StatefulWidget {
-  const Categoryscreen({super.key});
+class ProductListScreen extends StatefulWidget {
+  const ProductListScreen({super.key});
 
   @override
-  State<Categoryscreen> createState() => _CategoryscreenState();
+  State<ProductListScreen> createState() => _ProductListScreenState();
 }
 
-class _CategoryscreenState extends State<Categoryscreen> {
+class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            AppBarCategory(),
-            CategoryGrid(),
+            AppBarProductList(),
+            ProductGrid(),
           ],
         ),
       ),
@@ -26,8 +26,8 @@ class _CategoryscreenState extends State<Categoryscreen> {
   }
 }
 
-class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({
+class ProductGrid extends StatelessWidget {
+  const ProductGrid({
     super.key,
   });
 
@@ -37,29 +37,22 @@ class CategoryGrid extends StatelessWidget {
       padding: const EdgeInsets.only(left: 44.0, right: 44.0, bottom: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-          childCount: 8,
-          (context, index) {
-            return Container(
-              decoration: BoxDecoration(
-                color: CustomColors.green,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Image.asset('assets/images/iphone.png'),
-            );
-          },
+          childCount: 10,
+          (context, index) => const ProductContainer(),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 20.0,
           mainAxisSpacing: 20.0,
+          childAspectRatio: 2 / 2.8,
         ),
       ),
     );
   }
 }
 
-class AppBarCategory extends StatelessWidget {
-  const AppBarCategory({
+class AppBarProductList extends StatelessWidget {
+  const AppBarProductList({
     super.key,
   });
 
@@ -83,7 +76,7 @@ class AppBarCategory extends StatelessWidget {
               Image.asset('assets/images/icon_apple_blue.png'),
               const Expanded(
                 child: Text(
-                  'دسته بندی',
+                  'پرفروش ترین ها',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'sb',
