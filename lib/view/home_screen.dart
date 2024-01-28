@@ -16,19 +16,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            AppBar(),
-            BannersList(),
-            CategoryListTitle(),
-            CategoryList(),
-            MostViewTitle(),
-            MostViewProductList(),
-            BestSellerTitle(),
-            BestSellerProductList(),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          AppBar(),
+          BannersList(),
+          CategoryListTitle(),
+          CategoryList(),
+          MostViewTitle(),
+          MostViewProductList(),
+          BestSellerTitle(),
+          BestSellerProductList(),
+        ],
       ),
     );
   }
@@ -163,8 +161,8 @@ class MostViewTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding:
-            const EdgeInsets.only(right: 44, left: 44, bottom: 20, top: 32),
+        padding: const EdgeInsets.only(
+            right: 44.0, left: 44.0, bottom: 20.0, top: 63.0),
         child: Row(
           children: [
             Image.asset('assets/images/icon_left_categroy.png'),
