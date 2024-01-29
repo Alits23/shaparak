@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/view/card_screen.dart';
 import 'package:shaparak/view/category_screen.dart';
 import 'package:shaparak/view/home_screen.dart';
+import 'package:shaparak/view/product_detail_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/view/profile_screen.dart';
 
@@ -24,7 +26,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         children: const [
           ProfileScreen(),
           Categoryscreen(),
-          ProductListScreen(),
+          CardScreen(),
           HomeScreen(),
         ],
       ),
@@ -106,7 +108,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
                   ),
                 ),
                 activeIcon: Image.asset('assets/images/icon_basket_active.png'),
-                label: 'پرفروش ترین ها',
+                label: 'سبدخرید',
               ),
               // 3
               BottomNavigationBarItem(
