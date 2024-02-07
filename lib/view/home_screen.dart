@@ -4,7 +4,6 @@ import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/bloc/home/home_state.dart';
 import 'package:shaparak/constans/color.dart';
-import 'package:shaparak/widgets/banner_slider.dart';
 import 'package:shaparak/widgets/category_items.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../data/model/banner.dart';
