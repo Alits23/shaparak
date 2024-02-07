@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/category/category_bloc.dart';
+import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/view/card_screen.dart';
 import 'package:shaparak/view/category_screen.dart';
@@ -27,13 +28,20 @@ class _BottomNavigationState extends State<BottomNavigation> {
       body: IndexedStack(
         index: selectedIndex,
         children: [
+          // login screen
           const LoginScreen(),
+          // category screen
           BlocProvider(
             create: (context) => CategoryBloc(),
             child: const Categoryscreen(),
           ),
+          //card screen
           const CardScreen(),
-          const HomeScreen(),
+          //home screen
+          BlocProvider(
+            create: (context) => HomeBloc(),
+            child: const HomeScreen(),
+          ),
         ],
       ),
       bottomNavigationBar: ClipRRect(

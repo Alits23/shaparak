@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/home/home_bloc.dart';
+import 'package:shaparak/bloc/home/home_event.dart';
+import 'package:shaparak/bloc/home/home_state.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/widgets/banner_slider.dart';
 import 'package:shaparak/widgets/category_items.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../data/model/banner.dart';
+import '../widgets/cashed_image.dart';
 import '../widgets/product_container.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,20 +20,48 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    BlocProvider.of<HomeBloc>(context).add(HomeRequestList());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            AppBar(),
-            BannersList(),
-            CategoryListTitle(),
-            CategoryList(),
-            MostViewTitle(),
-            MostViewProductList(),
-            BestSellerTitle(),
-            BestSellerProductList(),
+            const AppBar(),
+            BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+              if (state is HomeLoadingState) {
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              if (state is HomeResponseState) {
+                return state.response.fold((l) {
+                  return SliverToBoxAdapter(
+                    child: Center(child: Text(l)),
+                  );
+                }, (r) {
+                  return BannerSlider(r);
+                });
+              }
+              return const SliverToBoxAdapter(
+                child: Center(
+                  child: Text('Erorr 404'),
+                ),
+              );
+            }),
+            const CategoryListTitle(),
+            const CategoryList(),
+            const MostViewTitle(),
+            const MostViewProductList(),
+            const BestSellerTitle(),
+            const BestSellerProductList(),
           ],
         ),
       ),
@@ -86,15 +121,50 @@ class AppBar extends StatelessWidget {
   }
 }
 
-class BannersList extends StatelessWidget {
-  const BannersList({
-    super.key,
-  });
+class BannerSlider extends StatelessWidget {
+  List<BannerCampaign> listBanner;
+  BannerSlider(this.listBanner, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const SliverToBoxAdapter(
-      child: BannerSlider(),
+    final bannerController =
+        PageController(viewportFraction: 0.8, keepPage: true);
+    return SliverToBoxAdapter(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          SizedBox(
+            height: 177.0,
+            child: PageView.builder(
+              controller: bannerController,
+              itemCount: listBanner.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CashedImage(
+                    radius: 15.0,
+                    imageUrl: listBanner[index].thumbnail,
+                  ),
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 10.0,
+            child: SmoothPageIndicator(
+              controller: bannerController,
+              count: listBanner.length,
+              effect: const ExpandingDotsEffect(
+                activeDotColor: CustomColors.blueIndicator,
+                dotColor: CustomColors.white,
+                expansionFactor: 4.0,
+                dotHeight: 9.0,
+                dotWidth: 9.0,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
