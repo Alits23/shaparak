@@ -3,7 +3,7 @@ import 'package:shaparak/data/model/category.dart';
 
 abstract class CategoryState {}
 
-class CategoryInitiatState extends CategoryState {}
+class CategoryInitState extends CategoryState {}
 
 class CategoryLoadingState extends CategoryState {}
 

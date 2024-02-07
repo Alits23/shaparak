@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/category/category_bloc.dart';
+import 'package:shaparak/bloc/category/category_event.dart';
+import 'package:shaparak/bloc/category/category_state.dart';
+import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
 
@@ -11,14 +17,45 @@ class Categoryscreen extends StatefulWidget {
 
 class _CategoryscreenState extends State<Categoryscreen> {
   @override
+  void initState() {
+    BlocProvider.of<CategoryBloc>(context).add(CategoryRequestList());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            AppBarCategory(),
-            CategoryGrid(),
+            const AppBarCategory(),
+            BlocBuilder<CategoryBloc, CategoryState>(
+              builder: (context, state) {
+                if (state is CategoryLoadingState) {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                if (state is CategoryResponseState) {
+                  return state.response.fold(
+                    (l) {
+                      return SliverToBoxAdapter(
+                        child: Center(child: Text(l)),
+                      );
+                    },
+                    (r) {
+                      return CategoryGrid(r);
+                    },
+                  );
+                }
+                return const SliverToBoxAdapter(
+                  child: Text('error'),
+                );
+              },
+            )
           ],
         ),
       ),
@@ -27,9 +64,8 @@ class _CategoryscreenState extends State<Categoryscreen> {
 }
 
 class CategoryGrid extends StatelessWidget {
-  const CategoryGrid({
-    super.key,
-  });
+  List<Category> listCategory;
+  CategoryGrid(this.listCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +73,9 @@ class CategoryGrid extends StatelessWidget {
       padding: const EdgeInsets.only(left: 44.0, right: 44.0, bottom: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-          childCount: 8,
+          childCount: listCategory.length,
           (context, index) {
-            return Container(
-              decoration: BoxDecoration(
-                color: CustomColors.green,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Image.asset('assets/images/iphone.png'),
-            );
+            return CashedImage(imageUrl: listCategory[index].thumbnail);
           },
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

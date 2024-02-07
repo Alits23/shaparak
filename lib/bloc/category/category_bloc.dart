@@ -7,7 +7,7 @@ import 'package:shaparak/di/di.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final ICategoryRepository _repository = locator.get();
 
-  CategoryBloc() : super(CategoryInitiatState()) {
+  CategoryBloc() : super(CategoryInitState()) {
     on<CategoryRequestList>((event, emit) async {
       emit(CategoryLoadingState());
 

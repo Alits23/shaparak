@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shaparak/widgets/bottom_navigation.dart';
 
-void main() {
+import 'di/di.dart';
+
+void main() async {
+  await getInit();
   runApp(const MyApp());
 }
 
