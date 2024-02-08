@@ -1,42 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
 
 class CategoryItems extends StatelessWidget {
-  const CategoryItems({super.key});
+  Category listCategory;
+  CategoryItems(this.listCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    String categoryColor = 'ff${listCategory.color}';
+    int hexColorCategories = int.parse(categoryColor, radix: 16);
     return Column(
       children: [
         Container(
           width: 56.0,
           height: 56.0,
           decoration: ShapeDecoration(
-            color: CustomColors.blueIndicator,
-            shadows: const [
+            color: Color(hexColorCategories),
+            shadows: [
               BoxShadow(
-                color: CustomColors.green,
+                color: Color(hexColorCategories),
                 blurRadius: 25,
                 spreadRadius: -12,
-                offset: Offset(0.0, 15.0),
+                offset: const Offset(0.0, 15.0),
               ),
             ],
             shape: ContinuousRectangleBorder(
               borderRadius: BorderRadius.circular(40),
             ),
           ),
-          child: const Icon(
-            Icons.apple,
-            color: CustomColors.white,
+          child: Center(
+            child: SizedBox(
+              height: 24,
+              width: 24,
+              child: CashedImage(
+                imageUrl: listCategory.icon,
+              ),
+            ),
           ),
         ),
         const SizedBox(
           height: 10.0,
         ),
-        const Text(
-          'اپل واچ',
-          style: TextStyle(
+        Text(
+          listCategory.title!,
+          style: const TextStyle(
             fontFamily: 'sb',
             fontSize: 14,
             color: Colors.black,

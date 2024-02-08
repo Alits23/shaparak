@@ -4,6 +4,7 @@ import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/bloc/home/home_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/widgets/category_items.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../data/model/banner.dart';
@@ -29,39 +30,44 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            const AppBar(),
-            BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-              if (state is HomeLoadingState) {
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              if (state is HomeResponseState) {
-                return state.response.fold((l) {
-                  return SliverToBoxAdapter(
-                    child: Center(child: Text(l)),
-                  );
-                }, (r) {
-                  return BannerSlider(r);
-                });
-              }
-              return const SliverToBoxAdapter(
-                child: Center(
-                  child: Text('Erorr 404'),
-                ),
-              );
-            }),
-            const CategoryListTitle(),
-            const CategoryList(),
-            const MostViewTitle(),
-            const MostViewProductList(),
-            const BestSellerTitle(),
-            const BestSellerProductList(),
-          ],
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            return CustomScrollView(
+              slivers: [
+                const AppBar(),
+                if (state is HomeLoadingState) ...{
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                },
+                if (state is HomeResponseState) ...{
+                  state.bannerlist.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Center(child: Text(l)),
+                    );
+                  }, (r) {
+                    return BannerSlider(r);
+                  })
+                },
+                const CategoryListTitle(),
+                if (state is HomeResponseState) ...{
+                  state.categoryList.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Center(child: Text(l)),
+                    );
+                  }, (r) {
+                    return CategoryList(r);
+                  })
+                },
+                const MostViewTitle(),
+                const MostViewProductList(),
+                const BestSellerTitle(),
+                const BestSellerProductList(),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -126,8 +132,8 @@ class BannerSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bannerController =
-        PageController(viewportFraction: 0.8, keepPage: true);
+    final bannerController = PageController(
+        viewportFraction: 0.8, keepPage: true, initialPage: listBanner.length);
     return SliverToBoxAdapter(
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -197,9 +203,8 @@ class CategoryListTitle extends StatelessWidget {
 }
 
 class CategoryList extends StatelessWidget {
-  const CategoryList({
-    super.key,
-  });
+  List<Category> listCategory;
+  CategoryList(this.listCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -210,11 +215,11 @@ class CategoryList extends StatelessWidget {
           reverse: true,
           padding: const EdgeInsets.only(right: 44.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 20,
+          itemCount: listCategory.length,
           itemBuilder: (context, index) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: CategoryItems(),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: CategoryItems(listCategory[index]),
             );
           },
         ),
