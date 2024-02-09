@@ -364,19 +364,22 @@ class BestSellerProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: SizedBox(
-        height: 200.0,
-        child: ListView.builder(
-          reverse: true,
-          padding: const EdgeInsets.only(right: 44.0),
-          scrollDirection: Axis.horizontal,
-          itemCount: productList.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: ProductContainer(productList[index]),
-            );
-          },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 15.0),
+        child: SizedBox(
+          height: 200.0,
+          child: ListView.builder(
+            reverse: true,
+            padding: const EdgeInsets.only(right: 44.0),
+            scrollDirection: Axis.horizontal,
+            itemCount: productList.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: ProductContainer(productList[index]),
+              );
+            },
+          ),
         ),
       ),
     );
