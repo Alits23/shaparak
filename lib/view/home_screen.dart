@@ -5,6 +5,7 @@ import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/bloc/home/home_state.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/widgets/category_items.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../data/model/banner.dart';
@@ -62,9 +63,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   })
                 },
                 const MostViewTitle(),
-                const MostViewProductList(),
+                if (state is HomeResponseState) ...{
+                  state.productListHotest.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Center(child: Text(l)),
+                    );
+                  }, (r) {
+                    return MostViewProductList(r);
+                  })
+                },
                 const BestSellerTitle(),
-                const BestSellerProductList(),
+                if (state is HomeResponseState) ...{
+                  state.productListBestSeller.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Center(child: Text(l)),
+                    );
+                  }, (r) {
+                    return BestSellerProductList(r);
+                  })
+                }
               ],
             );
           },
@@ -269,7 +286,9 @@ class MostViewTitle extends StatelessWidget {
 }
 
 class MostViewProductList extends StatelessWidget {
-  const MostViewProductList({
+  List<Product> productList;
+  MostViewProductList(
+    this.productList, {
     super.key,
   });
 
@@ -282,11 +301,11 @@ class MostViewProductList extends StatelessWidget {
           reverse: true,
           padding: const EdgeInsets.only(right: 44.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 20,
+          itemCount: productList.length,
           itemBuilder: (context, index) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: ProductContainer(),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ProductContainer(productList[index]),
             );
           },
         ),
@@ -336,7 +355,9 @@ class BestSellerTitle extends StatelessWidget {
 }
 
 class BestSellerProductList extends StatelessWidget {
-  const BestSellerProductList({
+  List<Product> productList;
+  BestSellerProductList(
+    this.productList, {
     super.key,
   });
 
@@ -349,11 +370,11 @@ class BestSellerProductList extends StatelessWidget {
           reverse: true,
           padding: const EdgeInsets.only(right: 44.0),
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: productList.length,
           itemBuilder: (context, index) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: ProductContainer(),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ProductContainer(productList[index]),
             );
           },
         ),

@@ -38,7 +38,11 @@ class ProductGrid extends StatelessWidget {
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
           childCount: 10,
-          (context, index) => const ProductContainer(),
+          (context, index) => Container(
+            width: 100,
+            height: 100,
+            color: Colors.amber,
+          ), //ProductContainer(),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

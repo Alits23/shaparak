@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
 
 class ProductContainer extends StatelessWidget {
-  const ProductContainer({
+  final Product product;
+  const ProductContainer(
+    this.product, {
     super.key,
   });
 
@@ -26,7 +30,14 @@ class ProductContainer extends StatelessWidget {
                 height: 120.0,
               ),
               SizedBox(
-                child: Image.asset('assets/images/iphone.png'),
+                width: 100,
+                height: 100,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: CashedImage(
+                    imageUrl: product.thumbnail,
+                  ),
+                ),
               ),
               Positioned(
                 top: 5.0,
@@ -43,10 +54,10 @@ class ProductContainer extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     color: Colors.red,
                   ),
-                  child: const Text(
-                    '99%',
+                  child: Text(
+                    '${product.persent!.toInt()} %',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: CustomColors.white,
                       fontSize: 15.0,
                       fontFamily: 'sm',
@@ -57,12 +68,12 @@ class ProductContainer extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                'آیفون 13 پرو مکس',
-                style: TextStyle(
+                product.name,
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14.0,
                   fontFamily: 'sb',
@@ -103,23 +114,23 @@ class ProductContainer extends StatelessWidget {
                       fontFamily: 'sm',
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 5.0),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '69/000/000',
-                          style: TextStyle(
+                          '${product.discount_price}',
+                          style: const TextStyle(
                               color: CustomColors.white,
                               fontSize: 12.0,
                               decoration: TextDecoration.lineThrough,
                               fontFamily: 'sm'),
                         ),
                         Text(
-                          '69/000/000',
-                          style: TextStyle(
+                          '${product.price}',
+                          style: const TextStyle(
                               color: CustomColors.white,
                               fontSize: 16.0,
                               fontFamily: 'sm'),
