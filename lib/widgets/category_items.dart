@@ -35,8 +35,11 @@ class CategoryItems extends StatelessWidget {
             child: SizedBox(
               height: 24,
               width: 24,
-              child: CashedImage(
-                imageUrl: listCategory.icon,
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: CashedImage(
+                  imageUrl: listCategory.icon,
+                ),
               ),
             ),
           ),
