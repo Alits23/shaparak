@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
@@ -17,7 +19,9 @@ class ProductContainer extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const ProductDetailScreen(),
+          builder: (context) => BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductDetailScreen(product)),
         ));
       },
       child: Container(
@@ -128,7 +132,7 @@ class ProductContainer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${product.discount_price}',
+                            '${product.price}',
                             style: const TextStyle(
                                 color: CustomColors.white,
                                 fontSize: 12.0,
@@ -136,7 +140,7 @@ class ProductContainer extends StatelessWidget {
                                 fontFamily: 'sm'),
                           ),
                           Text(
-                            '${product.price}',
+                            '${product.discount_price}',
                             style: const TextStyle(
                                 color: CustomColors.white,
                                 fontSize: 16.0,

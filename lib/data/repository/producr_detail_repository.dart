@@ -5,15 +5,16 @@ import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
 
 abstract class IProductDetailRepository {
-  Future<Either<String, List<ProductImage>>> getProductImage();
+  Future<Either<String, List<ProductImage>>> getProductImage(String productId);
 }
 
 class ProductDetailRepository extends IProductDetailRepository {
   final IProductDetailDatasource _datasource = locator.get();
   @override
-  Future<Either<String, List<ProductImage>>> getProductImage() async {
+  Future<Either<String, List<ProductImage>>> getProductImage(
+      String productId) async {
     try {
-      var response = await _datasource.getProductImage();
+      var response = await _datasource.getProductImage(productId);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطای ناشناخته');

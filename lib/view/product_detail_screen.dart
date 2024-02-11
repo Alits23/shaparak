@@ -1,41 +1,84 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
+import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
+import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/data/model/product_image.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+class ProductDetailScreen extends StatefulWidget {
+  Product product;
+  ProductDetailScreen(this.product, {super.key});
+
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<ProductBloc>(context).add(
+      ProductRequestList(widget.product.id),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            AppBarProduct(),
-            GalleryContainer(),
-            ColorsProduct(),
-            StorageProduct(),
-            SpecifiactionProduct(),
-            InfoProduct(),
-            UsersComment(),
-            SliverToBoxAdapter(
-                child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PriceTagButton(),
-                  SizedBox(
-                    width: 5.0,
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          return SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                const AppBarProduct(),
+                if (state is ProductLoadingState) ...{
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                },
+                if (state is ProductResponseState) ...{
+                  state.getProductImage.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Text(l),
+                    );
+                  }, (imageList) {
+                    return GalleryContainer(
+                      widget.product.thumbnail,
+                      imageList,
+                    );
+                  })
+                },
+                const ColorsProduct(),
+                const StorageProduct(),
+                const SpecifiactionProduct(),
+                const InfoProduct(),
+                const UsersComment(),
+                const SliverToBoxAdapter(
+                    child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PriceTagButton(),
+                      SizedBox(
+                        width: 5.0,
+                      ),
+                      AddToBasketButton(),
+                    ],
                   ),
-                  AddToBasketButton(),
-                ],
-              ),
-            ))
-          ],
-        ),
+                ))
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -530,11 +573,21 @@ class ColorsProduct extends StatelessWidget {
   }
 }
 
-class GalleryContainer extends StatelessWidget {
-  const GalleryContainer({
+class GalleryContainer extends StatefulWidget {
+  List<ProductImage> productImageList;
+  String defultImage;
+  int selecetedIndex = 0;
+  GalleryContainer(
+    this.defultImage,
+    this.productImageList, {
     super.key,
   });
 
+  @override
+  State<GalleryContainer> createState() => _GalleryContainerState();
+}
+
+class _GalleryContainerState extends State<GalleryContainer> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -570,9 +623,13 @@ class GalleryContainer extends StatelessWidget {
                       width: 180.0,
                       height: 180.0,
                       child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Image.asset('assets/images/iphone.png'),
-                      ),
+                          fit: BoxFit.contain,
+                          child: CashedImage(
+                            imageUrl: (widget.productImageList.isEmpty)
+                                ? widget.defultImage
+                                : widget.productImageList[widget.selecetedIndex]
+                                    .image,
+                          )),
                     ),
                     const SizedBox(
                       width: 20.0,
@@ -590,22 +647,32 @@ class GalleryContainer extends StatelessWidget {
                       const EdgeInsets.only(left: 44.0, right: 44.0, top: 4.0),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 6,
+                    itemCount: widget.productImageList.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        width: 70.0,
-                        height: 70.0,
-                        margin: const EdgeInsets.only(left: 20.0),
-                        padding: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          color: CustomColors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          border:
-                              Border.all(color: CustomColors.gery, width: 1.5),
-                        ),
-                        child: Image.asset(
-                          'assets/images/iphone.png',
-                          fit: BoxFit.contain,
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            widget.selecetedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          width: 70.0,
+                          height: 70.0,
+                          margin: const EdgeInsets.only(left: 20.0),
+                          padding: const EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            color: CustomColors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                                color: CustomColors.gery, width: 1.5),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: CashedImage(
+                              imageUrl: widget.productImageList[index].image,
+                              radius: 10.0,
+                            ),
+                          ),
                         ),
                       );
                     },
