@@ -8,6 +8,9 @@ import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
+import 'package:shaparak/data/model/product_variant.dart';
+import 'package:shaparak/data/model/variant.dart';
+import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -45,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   )
                 },
                 if (state is ProductResponseState) ...{
-                  state.getProductImage.fold((l) {
+                  state.productImages.fold((l) {
                     return SliverToBoxAdapter(
                       child: Text(l),
                     );
@@ -56,8 +59,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     );
                   })
                 },
-                const ColorsProduct(),
-                const StorageProduct(),
+                if (state is ProductResponseState) ...{
+                  state.productVariant.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Text(l),
+                    );
+                  }, (productvariantList) {
+                    return VariantContainer(productvariantList);
+                  })
+                },
+                //const StorageProduct(),
                 const SpecifiactionProduct(),
                 const InfoProduct(),
                 const UsersComment(),
@@ -457,8 +468,70 @@ class SpecifiactionProduct extends StatelessWidget {
   }
 }
 
-class StorageProduct extends StatelessWidget {
-  const StorageProduct({
+// class StorageProduct extends StatelessWidget {
+//   const StorageProduct({
+//     super.key,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SliverToBoxAdapter(
+//       child: Directionality(
+//         textDirection: TextDirection.rtl,
+//         child: Padding(
+//           padding: const EdgeInsets.only(right: 44.0, left: 44.0, top: 20.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Text(
+//                 'انتخاب حافظه',
+//                 style: TextStyle(fontSize: 12.0, fontFamily: 'sm'),
+//               ),
+//               const SizedBox(
+//                 height: 10.0,
+//               ),
+//               SizedBox(
+//                 height: 26.0,
+//                 child: ListView.builder(
+//                   scrollDirection: Axis.horizontal,
+//                   itemCount: 3,
+//                   itemBuilder: (context, index) {
+//                     return Container(
+//                       height: 25.0,
+//                       margin: const EdgeInsets.only(left: 10.0),
+//                       decoration: BoxDecoration(
+//                         color: Colors.white,
+//                         borderRadius: BorderRadius.circular(8.0),
+//                         border: Border.all(color: Colors.black, width: 1),
+//                       ),
+//                       child: const Center(
+//                         child: Padding(
+//                           padding: EdgeInsets.symmetric(horizontal: 20.0),
+//                           child: Text(
+//                             '128',
+//                             style: TextStyle(
+//                               fontFamily: 'sb',
+//                               fontSize: 12,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class VariantContainer extends StatelessWidget {
+  List<ProductVariant> productVariantList;
+  VariantContainer(
+    this.productVariantList, {
     super.key,
   });
 
@@ -472,99 +545,14 @@ class StorageProduct extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'انتخاب حافظه',
-                style: TextStyle(fontSize: 12.0, fontFamily: 'sm'),
+              Text(
+                productVariantList[0].variantType.title,
+                style: const TextStyle(fontSize: 12.0, fontFamily: 'sm'),
               ),
               const SizedBox(
                 height: 10.0,
               ),
-              SizedBox(
-                height: 26.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 25.0,
-                      margin: const EdgeInsets.only(left: 10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.black, width: 1),
-                      ),
-                      child: const Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text(
-                            '128',
-                            style: TextStyle(
-                              fontFamily: 'sb',
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ColorsProduct extends StatelessWidget {
-  const ColorsProduct({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 44.0, left: 44.0, top: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'انتخاب رنگ',
-                style: TextStyle(fontSize: 12.0, fontFamily: 'sm'),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              SizedBox(
-                height: 30.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 30.0,
-                      height: 30.0,
-                      margin: const EdgeInsets.only(left: 10.0),
-                      padding: const EdgeInsets.all(1.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: CustomColors.green,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              colorVariantList(productVariantList[0].variantList)
             ],
           ),
         ),
@@ -664,7 +652,11 @@ class _GalleryContainerState extends State<GalleryContainer> {
                             color: CustomColors.white,
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(
-                                color: CustomColors.gery, width: 1.5),
+                              color: widget.selecetedIndex == index
+                                  ? CustomColors.blue
+                                  : CustomColors.gery,
+                              width: widget.selecetedIndex == index ? 2.0 : 1.5,
+                            ),
                           ),
                           child: FittedBox(
                             fit: BoxFit.contain,
@@ -730,6 +722,50 @@ class AppBarProduct extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class colorVariantList extends StatefulWidget {
+  List<Variant> variantList;
+  colorVariantList(this.variantList, {super.key});
+
+  @override
+  State<colorVariantList> createState() => _colorVariantListState();
+}
+
+class _colorVariantListState extends State<colorVariantList> {
+  List<Widget> colorWidgets = [];
+  @override
+  void initState() {
+    for (var colorVariant in widget.variantList) {
+      String productColor = 'ff${colorVariant.value}';
+      int hexColor = int.parse(productColor, radix: 16);
+      var item = Container(
+        height: 26.0,
+        width: 26.0,
+        margin: const EdgeInsets.only(left: 10.0),
+        decoration: BoxDecoration(
+          color: Color(hexColor),
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+      );
+      colorWidgets.add(item);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 26.0,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: colorWidgets.length,
+        itemBuilder: (context, index) {
+          return colorWidgets[index];
+        },
       ),
     );
   }

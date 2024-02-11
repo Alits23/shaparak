@@ -7,11 +7,21 @@ import 'package:shaparak/di/di.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final IProductDetailRepository _detailRepository = locator.get();
   ProductBloc() : super(ProductInitState()) {
-    on<ProductRequestList>((event, emit) async {
-      emit(ProductLoadingState());
-      var getProductImage =
-          await _detailRepository.getProductImage(event.productId);
-      emit(ProductResponseState(getProductImage));
-    });
+    on<ProductRequestList>(
+      (event, emit) async {
+        emit(ProductLoadingState());
+        var productImages =
+            await _detailRepository.getProductImage(event.productId);
+        var productVariant =
+            await _detailRepository.getproductVariants(event.productId);
+
+        emit(
+          ProductResponseState(
+            productImages,
+            productVariant,
+          ),
+        );
+      },
+    );
   }
 }
