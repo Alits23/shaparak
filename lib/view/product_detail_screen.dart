@@ -39,7 +39,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return SafeArea(
             child: CustomScrollView(
               slivers: [
-                const AppBarProduct(),
+                AppBarProduct(widget.product.name),
                 if (state is ProductLoadingState) ...{
                   const SliverToBoxAdapter(
                     child: Center(
@@ -644,7 +644,9 @@ class _GalleryContainerState extends State<GalleryContainer> {
 }
 
 class AppBarProduct extends StatelessWidget {
-  const AppBarProduct({
+  String productTitle;
+  AppBarProduct(
+    this.productTitle, {
     super.key,
   });
 
@@ -666,11 +668,11 @@ class AppBarProduct extends StatelessWidget {
                 width: 16.0,
               ),
               Image.asset('assets/images/icon_apple_blue.png'),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  ' آیفون 13 پرومکس',
+                  productTitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'sb',
                     color: CustomColors.blue,
                     fontSize: 16.0,
