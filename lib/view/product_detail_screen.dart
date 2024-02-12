@@ -65,10 +65,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Text(l),
                     );
                   }, (productvariantList) {
-                    return VariantContainer(productvariantList);
+                    return VariantContainerGenerator(productvariantList);
                   })
                 },
-                //const StorageProduct(),
                 const SpecifiactionProduct(),
                 const InfoProduct(),
                 const UsersComment(),
@@ -468,69 +467,9 @@ class SpecifiactionProduct extends StatelessWidget {
   }
 }
 
-// class StorageProduct extends StatelessWidget {
-//   const StorageProduct({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return SliverToBoxAdapter(
-//       child: Directionality(
-//         textDirection: TextDirection.rtl,
-//         child: Padding(
-//           padding: const EdgeInsets.only(right: 44.0, left: 44.0, top: 20.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               const Text(
-//                 'انتخاب حافظه',
-//                 style: TextStyle(fontSize: 12.0, fontFamily: 'sm'),
-//               ),
-//               const SizedBox(
-//                 height: 10.0,
-//               ),
-//               SizedBox(
-//                 height: 26.0,
-//                 child: ListView.builder(
-//                   scrollDirection: Axis.horizontal,
-//                   itemCount: 3,
-//                   itemBuilder: (context, index) {
-//                     return Container(
-//                       height: 25.0,
-//                       margin: const EdgeInsets.only(left: 10.0),
-//                       decoration: BoxDecoration(
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.circular(8.0),
-//                         border: Border.all(color: Colors.black, width: 1),
-//                       ),
-//                       child: const Center(
-//                         child: Padding(
-//                           padding: EdgeInsets.symmetric(horizontal: 20.0),
-//                           child: Text(
-//                             '128',
-//                             style: TextStyle(
-//                               fontFamily: 'sb',
-//                               fontSize: 12,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class VariantContainer extends StatelessWidget {
+class VariantContainerGenerator extends StatelessWidget {
   List<ProductVariant> productVariantList;
-  VariantContainer(
+  VariantContainerGenerator(
     this.productVariantList, {
     super.key,
   });
@@ -539,23 +478,45 @@ class VariantContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Padding(
-          padding: const EdgeInsets.only(right: 44.0, left: 44.0, top: 20.0),
+          textDirection: TextDirection.rtl,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                productVariantList[0].variantType.title,
-                style: const TextStyle(fontSize: 12.0, fontFamily: 'sm'),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              colorVariantList(productVariantList[0].variantList)
+              for (var productVariant in productVariantList) ...{
+                if (productVariant.variantList.isNotEmpty) ...{
+                  VariantgeneratorChild(productVariant)
+                }
+              }
             ],
+          )),
+    );
+  }
+}
+
+class VariantgeneratorChild extends StatelessWidget {
+  ProductVariant productVariant;
+  VariantgeneratorChild(this.productVariant, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 44.0, left: 44.0, top: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            productVariant.variantType.title,
+            style: const TextStyle(fontSize: 12.0, fontFamily: 'sm'),
           ),
-        ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
+            colorVariantList(productVariant.variantList)
+          },
+          if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
+            StorageVariantList(productVariant.variantList)
+          },
+        ],
       ),
     );
   }
@@ -768,5 +729,60 @@ class _colorVariantListState extends State<colorVariantList> {
         },
       ),
     );
+  }
+}
+
+class StorageVariantList extends StatefulWidget {
+  List<Variant> storageVariantList;
+  StorageVariantList(this.storageVariantList, {super.key});
+
+  @override
+  State<StorageVariantList> createState() => _StorageVariantListState();
+}
+
+class _StorageVariantListState extends State<StorageVariantList> {
+  List<Widget> storageWidgetList = [];
+  @override
+  void initState() {
+    for (var storageVariant in widget.storageVariantList) {
+      var item = Container(
+        height: 25.0,
+        margin: const EdgeInsets.only(left: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: Colors.grey, width: 1),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              storageVariant.value!,
+              style: const TextStyle(
+                fontFamily: 'sb',
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ),
+      );
+      storageWidgetList.add(item);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 26.0,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: storageWidgetList.length,
+        itemBuilder: (context, index) {
+          return storageWidgetList[index];
+        },
+      ),
+    );
+    ;
   }
 }
