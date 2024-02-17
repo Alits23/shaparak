@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
 import 'package:shaparak/data/model/variant.dart';
@@ -13,9 +14,11 @@ class ProductLoadingState extends ProductState {}
 class ProductResponseState extends ProductState {
   Either<String, List<ProductImage>> productImages;
   Either<String, List<ProductVariant>> productVariant;
+  Either<String, Category> categoryId;
 
   ProductResponseState(
     this.productImages,
     this.productVariant,
+    this.categoryId,
   );
 }

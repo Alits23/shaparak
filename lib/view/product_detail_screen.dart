@@ -6,6 +6,7 @@ import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
@@ -25,7 +26,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     BlocProvider.of<ProductBloc>(context).add(
-      ProductRequestList(widget.product.id),
+      ProductRequestList(widget.product.id, widget.product.category),
     );
     super.initState();
   }
@@ -39,7 +40,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return SafeArea(
             child: CustomScrollView(
               slivers: [
-                AppBarProduct(widget.product.name),
                 if (state is ProductLoadingState) ...{
                   const SliverToBoxAdapter(
                     child: Center(
@@ -47,6 +47,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                   )
                 },
+                if (state is ProductResponseState) ...{
+                  state.categoryId.fold((l) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text(
+                          'دسته بندی',
+                          style: TextStyle(
+                              fontFamily: 'sb',
+                              fontSize: 16,
+                              color: CustomColors.blue),
+                        ),
+                      ),
+                    );
+                  }, (productCategory) {
+                    return AppBarProduct(productCategory.title!);
+                  })
+                },
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Text(
+                        widget.product.name,
+                        style: const TextStyle(
+                          fontFamily: 'sb',
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 if (state is ProductResponseState) ...{
                   state.productImages.fold((l) {
                     return SliverToBoxAdapter(
@@ -699,35 +731,53 @@ class colorVariantList extends StatefulWidget {
 }
 
 class _colorVariantListState extends State<colorVariantList> {
-  List<Widget> colorWidgets = [];
-  @override
-  void initState() {
-    for (var colorVariant in widget.variantList) {
-      String productColor = 'ff${colorVariant.value}';
-      int hexColor = int.parse(productColor, radix: 16);
-      var item = Container(
-        height: 26.0,
-        width: 26.0,
-        margin: const EdgeInsets.only(left: 10.0),
-        decoration: BoxDecoration(
-          color: Color(hexColor),
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.black, width: 1),
-        ),
-      );
-      colorWidgets.add(item);
-    }
-  }
-
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 26.0,
+      height: 32.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: colorWidgets.length,
+        itemCount: widget.variantList.length,
         itemBuilder: (context, index) {
-          return colorWidgets[index];
+          String productColor = 'ff${widget.variantList[index].value}';
+          int hexColor = int.parse(productColor, radix: 16);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3.0),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  height: 32.0,
+                  width: 32.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                        color: (_selectedIndex == index)
+                            ? CustomColors.blueIndicator
+                            : Colors.transparent,
+                        width: 2.0),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  child: Container(
+                    height: 25.0,
+                    width: 25.0,
+                    decoration: BoxDecoration(
+                      color: Color(hexColor),
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: Colors.grey, width: 1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
@@ -743,48 +793,46 @@ class StorageVariantList extends StatefulWidget {
 }
 
 class _StorageVariantListState extends State<StorageVariantList> {
-  List<Widget> storageWidgetList = [];
-  @override
-  void initState() {
-    for (var storageVariant in widget.storageVariantList) {
-      var item = Container(
-        height: 25.0,
-        margin: const EdgeInsets.only(left: 10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.grey, width: 1),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Text(
-              storageVariant.value!,
-              style: const TextStyle(
-                fontFamily: 'sb',
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ),
-      );
-      storageWidgetList.add(item);
-    }
-    super.initState();
-  }
-
+  int _selecetedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 26.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: storageWidgetList.length,
+        itemCount: widget.storageVariantList.length,
         itemBuilder: (context, index) {
-          return storageWidgetList[index];
+          return InkWell(
+            onTap: () {
+              setState(() {
+                _selecetedIndex = index;
+              });
+            },
+            child: Container(
+              height: 25.0,
+              margin: const EdgeInsets.only(left: 10.0),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: (_selecetedIndex == index)
+                      ? Border.all(width: 2, color: CustomColors.blueIndicator)
+                      : Border.all(width: 1, color: CustomColors.gery)),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    widget.storageVariantList[index].value!,
+                    style: const TextStyle(
+                      fontFamily: 'sb',
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
-    ;
   }
 }

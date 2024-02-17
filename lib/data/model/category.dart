@@ -4,7 +4,7 @@ class Category {
   String? icon;
   String? id;
   String? thumbnail;
-  String? title;
+  String title;
 
   Category(
     this.collectionId,

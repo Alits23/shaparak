@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
@@ -12,6 +13,7 @@ abstract class IProductDetailDatasource {
   Future<List<VariantType>> getVarinatTypes();
   Future<List<Variant>> getVarinat(String productId);
   Future<List<ProductVariant>> getProductVarinat(String productId);
+  Future<Category> getProductCategory(String categoryId);
 }
 
 class ProductDetailDatasourceRemote extends IProductDetailDatasource {
@@ -85,6 +87,23 @@ class ProductDetailDatasourceRemote extends IProductDetailDatasource {
         productVariantList.add(ProductVariant(variantType, variant));
       }
       return productVariantList;
+    } on DioException catch (ex) {
+      throw ApiException(
+        ex.response?.statusCode,
+        ex.response?.data['message'],
+      );
+    } catch (ex) {
+      throw ApiException(0, 'unknow error');
+    }
+  }
+
+  @override
+  Future<Category> getProductCategory(String categoryId) async {
+    Map<String, String> qParams = {'filter': 'id="$categoryId"'};
+    try {
+      var response = await _dio.get('collections/category/records',
+          queryParameters: qParams);
+      return Category.fromMapjson(response.data['items'][0]);
     } on DioException catch (ex) {
       throw ApiException(
         ex.response?.statusCode,
