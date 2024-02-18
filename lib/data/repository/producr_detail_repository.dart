@@ -3,6 +3,7 @@ import 'package:shaparak/data/datasource/product_detail_datasource.dart';
 import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
+import 'package:shaparak/data/model/properties.dart';
 import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/di/di.dart';
@@ -14,6 +15,8 @@ abstract class IProductDetailRepository {
   Future<Either<String, List<ProductVariant>>> getproductVariants(
       String productId);
   Future<Either<String, Category>> getProductCategory(String categoryId);
+  Future<Either<String, List<Properties>>> getProductProperties(
+      String productId);
 }
 
 class ProductDetailRepository extends IProductDetailRepository {
@@ -64,6 +67,17 @@ class ProductDetailRepository extends IProductDetailRepository {
   Future<Either<String, Category>> getProductCategory(String categoryId) async {
     try {
       var response = await _datasource.getProductCategory(categoryId);
+      return right(response);
+    } on ApiException catch (ex) {
+      return left(ex.message ?? 'خطای ناشناخته');
+    }
+  }
+
+  @override
+  Future<Either<String, List<Properties>>> getProductProperties(
+      String productId) async {
+    try {
+      var response = await _datasource.getProductProperties(productId);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطای ناشناخته');
