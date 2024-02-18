@@ -101,7 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   })
                 },
                 const SpecifiactionProduct(),
-                const InfoProduct(),
+                InfoProduct(widget.product.description),
                 const UsersComment(),
                 const SliverToBoxAdapter(
                     child: Padding(
@@ -397,52 +397,99 @@ class UsersComment extends StatelessWidget {
   }
 }
 
-class InfoProduct extends StatelessWidget {
-  const InfoProduct({
+// InfoProduct
+
+class InfoProduct extends StatefulWidget {
+  String productDescription;
+  InfoProduct(
+    this.productDescription, {
     super.key,
   });
 
   @override
+  State<InfoProduct> createState() => _InfoProductState();
+}
+
+class _InfoProductState extends State<InfoProduct> {
+  bool visibility = false;
+
+  @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
-        child: Container(
-          height: 46,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            border: Border.all(
-              width: 1,
-              color: CustomColors.gery,
-            ),
-          ),
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              Image.asset('assets/images/icon_left_categroy.png'),
-              const SizedBox(
-                width: 10,
-              ),
-              const Text(
-                'مشاهده',
-                style: TextStyle(
-                    fontFamily: 'sm', fontSize: 12, color: CustomColors.blue),
-              ),
-              const Spacer(),
-              const Text(
-                ': توضیحات محصول',
-                style: TextStyle(
-                  fontFamily: 'sb',
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
+            child: Container(
+              height: 46,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  width: 1,
+                  color: CustomColors.gery,
                 ),
               ),
-              const SizedBox(
-                width: 10,
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        visibility = !visibility;
+                      });
+                    },
+                    child: (visibility)
+                        ? Image.asset('assets/images/icon_down_categroy.png')
+                        : Image.asset('assets/images/icon_left_categroy.png'),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  const Text(
+                    'مشاهده',
+                    style: TextStyle(
+                        fontFamily: 'sm',
+                        fontSize: 12,
+                        color: CustomColors.blue),
+                  ),
+                  const Spacer(),
+                  const Text(
+                    ': توضیحات محصول',
+                    style: TextStyle(
+                      fontFamily: 'sb',
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Visibility(
+            visible: visibility,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 24.0, left: 44.0, right: 44.0),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  width: 1,
+                  color: CustomColors.gery,
+                ),
+              ),
+              child: Text(
+                widget.productDescription,
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                    fontFamily: 'sm', fontSize: 16.0, height: 1.8),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
