@@ -8,6 +8,7 @@ abstract class IproductRepository {
   Future<Either<String, List<Product>>> getProduct();
   Future<Either<String, List<Product>>> getProductHotest();
   Future<Either<String, List<Product>>> getProductBestSeller();
+  Future<Either<String, List<Product>>> getProductList(String categoryId);
 }
 
 class ProductRepository extends IproductRepository {
@@ -36,6 +37,17 @@ class ProductRepository extends IproductRepository {
   Future<Either<String, List<Product>>> getProductBestSeller() async {
     try {
       var response = await _datasource.getProductBestSeller();
+      return right(response);
+    } on ApiException catch (ex) {
+      return left(ex.message ?? 'خطای ناشناخته');
+    }
+  }
+
+  @override
+  Future<Either<String, List<Product>>> getProductList(
+      String categoryId) async {
+    try {
+      var response = await _datasource.getProductList(categoryId);
       return right(response);
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطای ناشناخته');

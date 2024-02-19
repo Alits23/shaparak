@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/product_list/product_list_bloc.dart';
+import 'package:shaparak/bloc/product_list/product_list_event.dart';
+import 'package:shaparak/bloc/product_list/product_state.dart';
+import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/widgets/product_container.dart';
 
 import '../constans/color.dart';
 
 class ProductListScreen extends StatefulWidget {
-  const ProductListScreen({super.key});
+  Category category;
+  ProductListScreen(this.category, {super.key});
 
   @override
   State<ProductListScreen> createState() => _ProductListScreenState();
@@ -12,37 +19,61 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   @override
+  void initState() {
+    BlocProvider.of<ProductListBloc>(context)
+        .add(ProductListRequest(widget.category.id!));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            AppBarProductList(),
-            ProductGrid(),
-          ],
-        ),
-      ),
+    return BlocBuilder<ProductListBloc, ProductListState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                AppBarProductList(widget.category.title),
+                if (state is ProductListLoadingState) ...{
+                  const SliverToBoxAdapter(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                },
+                if (state is ProductListResponseState) ...{
+                  state.productList.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Center(child: Text(l)),
+                    );
+                  }, (r) {
+                    return ProductGrid(r);
+                  })
+                }
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({
+  List<Product> productList;
+  ProductGrid(
+    this.productList, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.only(left: 44.0, right: 44.0, bottom: 20),
+      padding: const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
-          childCount: 10,
-          (context, index) => Container(
-            width: 100,
-            height: 100,
-            color: Colors.amber,
-          ), //ProductContainer(),
+          childCount: productList.length,
+          (context, index) => ProductContainer(productList[index]),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -56,7 +87,9 @@ class ProductGrid extends StatelessWidget {
 }
 
 class AppBarProductList extends StatelessWidget {
-  const AppBarProductList({
+  String category;
+  AppBarProductList(
+    this.category, {
     super.key,
   });
 
@@ -78,11 +111,11 @@ class AppBarProductList extends StatelessWidget {
                 width: 16.0,
               ),
               Image.asset('assets/images/icon_apple_blue.png'),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'پرفروش ترین ها',
+                  category,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'sb',
                     color: CustomColors.blue,
                     fontSize: 16.0,
