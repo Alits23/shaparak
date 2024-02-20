@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/category/category_bloc.dart';
 import 'package:shaparak/bloc/category/category_event.dart';
 import 'package:shaparak/bloc/category/category_state.dart';
+import 'package:shaparak/bloc/product_list/product_list_bloc.dart';
 import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
@@ -46,8 +48,8 @@ class _CategoryscreenState extends State<Categoryscreen> {
                         child: Center(child: Text(l)),
                       );
                     },
-                    (r) {
-                      return CategoryGrid(r);
+                    (categoryList) {
+                      return CategoryGrid(categoryList);
                     },
                   );
                 }
@@ -75,7 +77,21 @@ class CategoryGrid extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           childCount: listCategory.length,
           (context, index) {
-            return CashedImage(imageUrl: listCategory[index].thumbnail);
+            return InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => ProductListBloc(),
+                      child: ProductListScreen(listCategory[index]),
+                    ),
+                  ),
+                );
+              },
+              child: CashedImage(
+                imageUrl: listCategory[index].thumbnail,
+              ),
+            );
           },
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
