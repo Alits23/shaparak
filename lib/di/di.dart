@@ -15,7 +15,7 @@ var locator = GetIt.instance;
 Future<void> getInit() async {
   locator.registerSingleton<Dio>(
     Dio(
-      BaseOptions(baseUrl: 'http://startflutter.ir/api/'),
+      BaseOptions(baseUrl: 'https://startflutter.ir/api/'),
     ),
   );
 
