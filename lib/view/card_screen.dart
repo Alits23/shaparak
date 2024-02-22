@@ -1,5 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:shaparak/util/extenstions/string_extensions.dart';
 import '../constans/color.dart';
 
 class CardScreen extends StatelessWidget {
@@ -150,7 +151,7 @@ class CardItem extends StatelessWidget {
                           'آیفون 13 پرو مکس',
                           style: TextStyle(
                             fontFamily: 'sb',
-                            fontSize: 18.0,
+                            fontSize: 16.0,
                           ),
                         ),
                         const SizedBox(
@@ -190,19 +191,33 @@ class CardItem extends StatelessWidget {
                             const SizedBox(
                               width: 10.0,
                             ),
-                            const Text('تومان'),
+                            const Text(
+                              'تومان',
+                              style: TextStyle(
+                                fontFamily: 'sm',
+                                fontSize: 12,
+                              ),
+                            ),
                             const SizedBox(
                               width: 4.0,
                             ),
-                            const Text('49،000،000'),
+                            const Text(
+                              '49،000،000',
+                              style: TextStyle(
+                                fontFamily: 'sm',
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(
-                          height: 5.0,
+                          height: 12.0,
                         ),
-                        const Wrap(
+                        Wrap(
+                          spacing: 8,
                           children: [
-                            OptionCheap(),
+                            const DeleteProduct(),
+                            OptionCheap('آبی فیروزه ای', color: '4287f5'),
                           ],
                         ),
                       ],
@@ -231,11 +246,23 @@ class CardItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('تومان'),
+                Text(
+                  'تومان',
+                  style: TextStyle(
+                    fontFamily: 'sb',
+                    fontSize: 16,
+                  ),
+                ),
                 SizedBox(
                   width: 5.0,
                 ),
-                Text('49،000،000'),
+                Text(
+                  '49،000،000',
+                  style: TextStyle(
+                    fontFamily: 'sb',
+                    fontSize: 16,
+                  ),
+                ),
               ],
             ),
           ),
@@ -245,10 +272,49 @@ class CardItem extends StatelessWidget {
   }
 }
 
-class OptionCheap extends StatelessWidget {
-  const OptionCheap({
+class DeleteProduct extends StatelessWidget {
+  const DeleteProduct({
     super.key,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: CustomColors.red,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'حذف',
+              style: TextStyle(
+                fontFamily: 'sm',
+                fontSize: 12.0,
+                color: CustomColors.red,
+              ),
+            ),
+            const SizedBox(
+              width: 5.0,
+            ),
+            Image.asset('assets/images/icon_trash.png'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OptionCheap extends StatelessWidget {
+  String title;
+  String? color;
+  OptionCheap(this.title, {super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -258,17 +324,29 @@ class OptionCheap extends StatelessWidget {
           color: CustomColors.gery,
           width: 1,
         ),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/images/icon_options.png'),
-            const SizedBox(
-              width: 10,
+            Text(
+              title,
+              textDirection: TextDirection.rtl,
+              style: const TextStyle(fontFamily: 'sm', fontSize: 12.0),
             ),
-            const Text('256')
+            if (color != null) ...{
+              Container(
+                width: 12.0,
+                height: 12.0,
+                margin: const EdgeInsets.only(left: 8.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.parseToColor(),
+                ),
+              ),
+            },
           ],
         ),
       ),
