@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/basket_item.dart';
 import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
@@ -112,17 +114,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 },
                 InfoProduct(widget.product.description),
                 const UsersComment(),
-                const SliverToBoxAdapter(
+                SliverToBoxAdapter(
                     child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      PriceTagButton(),
-                      SizedBox(
+                      const PriceTagButton(),
+                      const SizedBox(
                         width: 5.0,
                       ),
-                      AddToBasketButton(),
+                      AddToBasketButton(widget.product),
                     ],
                   ),
                 ))
@@ -234,48 +236,65 @@ class PriceTagButton extends StatelessWidget {
 }
 
 class AddToBasketButton extends StatelessWidget {
-  const AddToBasketButton({
+  Product product;
+  AddToBasketButton(
+    this.product, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: 150,
-          height: 60,
-          decoration: BoxDecoration(
-            color: CustomColors.blue,
-            borderRadius: BorderRadius.circular(15.0),
+    return InkWell(
+      onTap: () {
+        var cardItem = BasketItem(
+          product.collectionId,
+          product.discount_price,
+          product.id,
+          product.name,
+          product.price,
+          product.thumbnail,
+          product.category,
+        );
+        var cardBox = Hive.box<BasketItem>('BasketItem');
+        cardBox.add(cardItem);
+      },
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            width: 150,
+            height: 60,
+            decoration: BoxDecoration(
+              color: CustomColors.blue,
+              borderRadius: BorderRadius.circular(15.0),
+            ),
           ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-            child: Container(
-              width: 170,
-              height: 53,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: const Center(
-                child: Text(
-                  'افزودن به سبد خرید',
-                  style: TextStyle(
-                    color: CustomColors.white,
-                    fontFamily: 'sb',
-                    fontSize: 16.0,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+              child: Container(
+                width: 170,
+                height: 53,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: const Center(
+                  child: Text(
+                    'افزودن به سبد خرید',
+                    style: TextStyle(
+                      color: CustomColors.white,
+                      fontFamily: 'sb',
+                      fontSize: 16.0,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

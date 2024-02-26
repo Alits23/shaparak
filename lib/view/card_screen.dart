@@ -1,13 +1,18 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shaparak/util/extenstions/string_extensions.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
+import '../data/model/basket_item.dart';
 
 class CardScreen extends StatelessWidget {
   const CardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var cardBox = Hive.box<BasketItem>('BasketItem');
+
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
@@ -19,9 +24,9 @@ class CardScreen extends StatelessWidget {
                 const AppBarCard(),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    childCount: 5,
+                    childCount: cardBox.values.toList().length,
                     (context, index) {
-                      return const CardItem();
+                      return CardItem(cardBox.values.toList()[index]);
                     },
                   ),
                 ),
@@ -121,7 +126,9 @@ class AppBarCard extends StatelessWidget {
 }
 
 class CardItem extends StatelessWidget {
-  const CardItem({
+  BasketItem basketItem;
+  CardItem(
+    this.basketItem, {
     super.key,
   });
 
@@ -147,9 +154,9 @@ class CardItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'آیفون 13 پرو مکس',
-                          style: TextStyle(
+                        Text(
+                          basketItem.name,
+                          style: const TextStyle(
                             fontFamily: 'sb',
                             fontSize: 16.0,
                           ),
@@ -201,9 +208,9 @@ class CardItem extends StatelessWidget {
                             const SizedBox(
                               width: 4.0,
                             ),
-                            const Text(
-                              '49،000،000',
-                              style: TextStyle(
+                            Text(
+                              '${basketItem.price}',
+                              style: const TextStyle(
                                 fontFamily: 'sm',
                                 fontSize: 12,
                               ),
@@ -226,8 +233,14 @@ class CardItem extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0),
-                  child: Image.asset('assets/images/iphone.png'),
-                )
+                  child: SizedBox(
+                    width: 75,
+                    height: 104,
+                    child: CashedImage(
+                      imageUrl: basketItem.thumbnail,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -241,24 +254,24 @@ class CardItem extends StatelessWidget {
               dashGapColor: Colors.transparent,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'تومان',
                   style: TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 5.0,
                 ),
                 Text(
-                  '49،000،000',
-                  style: TextStyle(
+                  '${basketItem.discount_price}',
+                  style: const TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
                   ),
