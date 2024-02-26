@@ -6,9 +6,14 @@ import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
 import '../data/model/basket_item.dart';
 
-class CardScreen extends StatelessWidget {
+class CardScreen extends StatefulWidget {
   const CardScreen({super.key});
 
+  @override
+  State<CardScreen> createState() => _CardScreenState();
+}
+
+class _CardScreenState extends State<CardScreen> {
   @override
   Widget build(BuildContext context) {
     var cardBox = Hive.box<BasketItem>('BasketItem');
@@ -236,8 +241,11 @@ class CardItem extends StatelessWidget {
                   child: SizedBox(
                     width: 75,
                     height: 104,
-                    child: CashedImage(
-                      imageUrl: basketItem.thumbnail,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: CashedImage(
+                        imageUrl: basketItem.thumbnail,
+                      ),
                     ),
                   ),
                 ),

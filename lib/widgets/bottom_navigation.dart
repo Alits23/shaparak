@@ -36,7 +36,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             child: const Categoryscreen(),
           ),
           //card screen
-          const CardScreen(),
+          CardScreen(),
           //home screen
           BlocProvider(
             create: (context) => HomeBloc(),

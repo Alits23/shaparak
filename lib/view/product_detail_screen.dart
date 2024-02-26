@@ -246,17 +246,7 @@ class AddToBasketButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        var cardItem = BasketItem(
-          product.collectionId,
-          product.discount_price,
-          product.id,
-          product.name,
-          product.price,
-          product.thumbnail,
-          product.category,
-        );
-        var cardBox = Hive.box<BasketItem>('BasketItem');
-        cardBox.add(cardItem);
+        context.read<ProductBloc>().add(ProductAddToBasket(product));
       },
       child: Stack(
         alignment: Alignment.bottomCenter,
