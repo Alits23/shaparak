@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shaparak/bloc/card/card_bloc.dart';
+import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
@@ -27,12 +29,26 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
-  void initState() {
-    BlocProvider.of<ProductBloc>(context).add(
-      ProductRequestList(widget.product.id, widget.product.category),
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        var bloc = ProductBloc();
+        bloc.add(
+            ProductRequestList(widget.product.id, widget.product.category));
+        return bloc;
+      },
+      child: DetailContentWidget(parentWidget: widget),
     );
-    super.initState();
   }
+}
+
+class DetailContentWidget extends StatelessWidget {
+  const DetailContentWidget({
+    super.key,
+    required this.parentWidget,
+  });
+
+  final ProductDetailScreen parentWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +88,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20.0),
                       child: Text(
-                        widget.product.name,
+                        parentWidget.product.name,
                         style: const TextStyle(
                           fontFamily: 'sb',
                           fontSize: 16.0,
@@ -89,7 +105,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     );
                   }, (imageList) {
                     return GalleryContainer(
-                      widget.product.thumbnail,
+                      parentWidget.product.thumbnail,
                       imageList,
                     );
                   })
@@ -112,7 +128,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     return ProductProperties(propertyList);
                   })
                 },
-                InfoProduct(widget.product.description),
+                InfoProduct(parentWidget.product.description),
                 const UsersComment(),
                 SliverToBoxAdapter(
                     child: Padding(
@@ -124,7 +140,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       const SizedBox(
                         width: 5.0,
                       ),
-                      AddToBasketButton(widget.product),
+                      AddToBasketButton(parentWidget.product),
                     ],
                   ),
                 ))
@@ -247,6 +263,7 @@ class AddToBasketButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductBloc>().add(ProductAddToBasket(product));
+        context.read<CardBloc>().add(CardRequestDataEvent());
       },
       child: Stack(
         alignment: Alignment.bottomCenter,

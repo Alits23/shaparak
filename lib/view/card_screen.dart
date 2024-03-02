@@ -1,6 +1,11 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shaparak/bloc/card/card_bloc.dart';
+import 'package:shaparak/bloc/card/card_event.dart';
+import 'package:shaparak/bloc/card/card_state.dart';
+import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/extenstions/string_extensions.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
@@ -20,30 +25,40 @@ class _CardScreenState extends State<CardScreen> {
 
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            CustomScrollView(
-              slivers: [
-                const AppBarCard(),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    childCount: cardBox.values.toList().length,
-                    (context, index) {
-                      return CardItem(cardBox.values.toList()[index]);
-                    },
+      body: SafeArea(child: BlocBuilder<CardBloc, CardState>(
+        builder: (context, state) {
+          return Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              CustomScrollView(
+                slivers: [
+                  const AppBarCard(),
+                  if (state is CardResponsState) ...{
+                    state.basketItemList.fold((l) {
+                      return SliverToBoxAdapter(
+                        child: Text(l),
+                      );
+                    }, (basketItemList) {
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          childCount: basketItemList.length,
+                          (context, index) {
+                            return CardItem(basketItemList[index]);
+                          },
+                        ),
+                      );
+                    })
+                  },
+                  const SliverPadding(
+                    padding: EdgeInsets.only(bottom: 60.0),
                   ),
-                ),
-                const SliverPadding(
-                  padding: EdgeInsets.only(bottom: 60.0),
-                ),
-              ],
-            ),
-            const ButtonBuy(),
-          ],
-        ),
-      ),
+                ],
+              ),
+              const ButtonBuy(),
+            ],
+          );
+        },
+      )),
     );
   }
 }

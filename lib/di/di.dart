@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/data/datasource/banner_datasource.dart';
 import 'package:shaparak/data/datasource/basket_datasource.dart';
 import 'package:shaparak/data/datasource/category_datasource.dart';
@@ -37,4 +38,7 @@ Future<void> getInit() async {
   locator.registerFactory<IProductDetailRepository>(
       () => ProductDetailRepository());
   locator.registerFactory<IBasketRepository>(() => BasketRepository());
+
+  //bloc
+  locator.registerSingleton<CardBloc>(CardBloc());
 }

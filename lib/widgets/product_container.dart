@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/di/di.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
@@ -18,11 +20,14 @@ class ProductContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => BlocProvider(
-              create: (context) => ProductBloc(),
-              child: ProductDetailScreen(product)),
-        ));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => BlocProvider<CardBloc>.value(
+              value: locator.get<CardBloc>(),
+              child: ProductDetailScreen(product),
+            ),
+          ),
+        );
       },
       child: Container(
         width: 160.0,

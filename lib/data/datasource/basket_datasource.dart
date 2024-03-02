@@ -3,6 +3,7 @@ import 'package:shaparak/data/model/basket_item.dart';
 
 abstract class IBasketDatasource {
   Future<void> addProduct(BasketItem basketItem);
+  Future<List<BasketItem>> getAllBasketItem();
 }
 
 class BasketLocalDataSource extends IBasketDatasource {
@@ -10,5 +11,10 @@ class BasketLocalDataSource extends IBasketDatasource {
   @override
   Future<void> addProduct(BasketItem basketItem) async {
     cardBox.add(basketItem);
+  }
+
+  @override
+  Future<List<BasketItem>> getAllBasketItem() async {
+    return cardBox.values.toList();
   }
 }

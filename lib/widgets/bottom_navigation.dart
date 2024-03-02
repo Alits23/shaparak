@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/category/category_bloc.dart';
 import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/constans/color.dart';
@@ -12,6 +13,9 @@ import 'package:shaparak/view/login_screen.dart';
 import 'package:shaparak/view/product_detail_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/view/profile_screen.dart';
+
+import '../bloc/card/card_event.dart';
+import '../di/di.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({super.key});
@@ -36,7 +40,14 @@ class _BottomNavigationState extends State<BottomNavigation> {
             child: const Categoryscreen(),
           ),
           //card screen
-          CardScreen(),
+          BlocProvider(
+            create: ((context) {
+              var bloc = locator.get<CardBloc>();
+              bloc.add(CardRequestDataEvent());
+              return bloc;
+            }),
+            child: CardScreen(),
+          ),
           //home screen
           BlocProvider(
             create: (context) => HomeBloc(),

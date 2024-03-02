@@ -6,10 +6,11 @@ import 'package:shaparak/widgets/bottom_navigation.dart';
 import 'di/di.dart';
 
 void main() async {
-  await getInit();
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(BasketItemAdapter());
   await Hive.openBox<BasketItem>('BasketItem');
+  await getInit();
   runApp(const MyApp());
 }
 
