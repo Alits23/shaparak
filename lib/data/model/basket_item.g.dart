@@ -24,13 +24,15 @@ class BasketItemAdapter extends TypeAdapter<BasketItem> {
       fields[4] as int?,
       fields[5] as String,
       fields[6] as String,
-    )..persent = fields[7] as num?;
+    )
+      ..persent = fields[7] as num?
+      ..realPrice = fields[8] as int?;
   }
 
   @override
   void write(BinaryWriter writer, BasketItem obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.collectionId)
       ..writeByte(1)
@@ -46,7 +48,9 @@ class BasketItemAdapter extends TypeAdapter<BasketItem> {
       ..writeByte(6)
       ..write(obj.category)
       ..writeByte(7)
-      ..write(obj.persent);
+      ..write(obj.persent)
+      ..writeByte(8)
+      ..write(obj.realPrice);
   }
 
   @override

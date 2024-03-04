@@ -197,12 +197,12 @@ class CardItem extends StatelessWidget {
                                 color: CustomColors.red,
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 2.0, horizontal: 6.0),
                                 child: Text(
-                                  '%3',
-                                  style: TextStyle(
+                                  '${basketItem.persent!.toInt()} %',
+                                  style: const TextStyle(
                                     fontFamily: 'sb',
                                     fontSize: 12,
                                     color: CustomColors.white,
@@ -288,7 +288,7 @@ class CardItem extends StatelessWidget {
                   width: 5.0,
                 ),
                 Text(
-                  '${basketItem.discount_price}',
+                  '${basketItem.realPrice}',
                   style: const TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,

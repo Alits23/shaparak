@@ -19,6 +19,8 @@ class BasketItem {
   String category;
   @HiveField(7)
   num? persent;
+  @HiveField(8)
+  int? realPrice;
 
   BasketItem(
     this.collectionId,
@@ -29,6 +31,7 @@ class BasketItem {
     this.thumbnail,
     this.category,
   ) {
-    persent = ((price! - discount_price!) / price!) * 100;
+    realPrice = price! - discount_price!;
+    persent = ((price! + discount_price!) / price!) * 100 - 100;
   }
 }
