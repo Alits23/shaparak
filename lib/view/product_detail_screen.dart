@@ -2,15 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
-import 'package:shaparak/data/model/basket_item.dart';
-import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
@@ -20,8 +17,8 @@ import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  Product product;
-  ProductDetailScreen(this.product, {super.key});
+  final Product product;
+  const ProductDetailScreen(this.product, {super.key});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -37,13 +34,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ProductRequestList(widget.product.id, widget.product.category));
         return bloc;
       },
-      child: DetailContentWidget(parentWidget: widget),
+      child: DetailContentWidget(widget.product, parentWidget: widget),
     );
   }
 }
 
 class DetailContentWidget extends StatelessWidget {
-  const DetailContentWidget({
+  Product product;
+  DetailContentWidget(
+    this.product, {
     super.key,
     required this.parentWidget,
   });
@@ -136,7 +135,7 @@ class DetailContentWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const PriceTagButton(),
+                      PriceTagButton(product),
                       const SizedBox(
                         width: 5.0,
                       ),
@@ -154,7 +153,9 @@ class DetailContentWidget extends StatelessWidget {
 }
 
 class PriceTagButton extends StatelessWidget {
-  const PriceTagButton({
+  final Product product;
+  const PriceTagButton(
+    this.product, {
     super.key,
   });
 
@@ -184,6 +185,7 @@ class PriceTagButton extends StatelessWidget {
               ),
               child: Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       'تومان',
@@ -196,13 +198,13 @@ class PriceTagButton extends StatelessWidget {
                     const SizedBox(
                       width: 5,
                     ),
-                    const Column(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '49,000,000',
-                          style: TextStyle(
+                          '${product.price}',
+                          style: const TextStyle(
                             color: CustomColors.white,
                             fontFamily: 'sm',
                             fontSize: 12,
@@ -210,8 +212,8 @@ class PriceTagButton extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '48,888,888',
-                          style: TextStyle(
+                          '${product.realPrice}',
+                          style: const TextStyle(
                             color: CustomColors.white,
                             fontFamily: 'sm',
                             fontSize: 16,
@@ -219,20 +221,18 @@ class PriceTagButton extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Container(
-                      height: 20,
-                      width: 42,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        color: Colors.red,
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 2.0, horizontal: 6.0),
+                    Center(
+                      child: Container(
+                        height: 20,
+                        width: 42,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          color: Colors.red,
+                        ),
                         child: Text(
-                          '99%',
+                          '${product.persent!.toInt()} %',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: CustomColors.white,
                             fontSize: 15.0,
                             fontFamily: 'sm',

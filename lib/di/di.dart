@@ -6,7 +6,6 @@ import 'package:shaparak/data/datasource/basket_datasource.dart';
 import 'package:shaparak/data/datasource/category_datasource.dart';
 import 'package:shaparak/data/datasource/product_datasource.dart';
 import 'package:shaparak/data/datasource/product_detail_datasource.dart';
-import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/repository/banner_repository.dart';
 import 'package:shaparak/data/repository/basket_repository.dart';
 import 'package:shaparak/data/repository/category_repository.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
-import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
@@ -145,7 +144,7 @@ class ProductContainer extends StatelessWidget {
                                 fontFamily: 'sm'),
                           ),
                           Text(
-                            '${product.discount_price}',
+                            '${product.realPrice}',
                             style: const TextStyle(
                                 color: CustomColors.white,
                                 fontSize: 16.0,

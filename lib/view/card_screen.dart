@@ -1,11 +1,8 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
-import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/card/card_state.dart';
-import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/extenstions/string_extensions.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
@@ -21,8 +18,6 @@ class CardScreen extends StatefulWidget {
 class _CardScreenState extends State<CardScreen> {
   @override
   Widget build(BuildContext context) {
-    var cardBox = Hive.box<BasketItem>('BasketItem');
-
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(child: BlocBuilder<CardBloc, CardState>(
