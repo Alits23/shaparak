@@ -49,7 +49,9 @@ class _CardScreenState extends State<CardScreen> {
                   ),
                 ],
               ),
-              const ButtonBuy(),
+              if (state is CardResponsState) ...{
+                ButtonBuy(state.basketFinalPrice),
+              },
             ],
           );
         },
@@ -59,7 +61,9 @@ class _CardScreenState extends State<CardScreen> {
 }
 
 class ButtonBuy extends StatelessWidget {
-  const ButtonBuy({
+  int finalPrice;
+  ButtonBuy(
+    this.finalPrice, {
     super.key,
   });
 
@@ -82,9 +86,9 @@ class ButtonBuy extends StatelessWidget {
             ),
           ),
           onPressed: () {},
-          child: const Text(
-            'ادامه فرایند خرید',
-            style: TextStyle(
+          child: Text(
+            (finalPrice == 0) ? '!!! سبد خرید شما خالیه ' : '$finalPrice',
+            style: const TextStyle(
               fontFamily: 'sm',
               fontSize: 18.0,
             ),

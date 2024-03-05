@@ -10,7 +10,11 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   CardBloc() : super(CardInitState()) {
     on<CardRequestDataEvent>((event, emit) async {
       var basketItemList = await _basketRepository.getAllBasketItem();
-      emit(CardResponsState(basketItemList));
+      var finalPrice = await _basketRepository.getBasketFinalPrice();
+      emit(CardResponsState(
+        basketItemList,
+        finalPrice,
+      ));
     });
   }
 }

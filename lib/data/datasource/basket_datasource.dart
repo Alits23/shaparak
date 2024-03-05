@@ -4,6 +4,7 @@ import 'package:shaparak/data/model/basket_item.dart';
 abstract class IBasketDatasource {
   Future<void> addProduct(BasketItem basketItem);
   Future<List<BasketItem>> getAllBasketItem();
+  Future<int> getBasketFinalPrice();
 }
 
 class BasketLocalDataSource extends IBasketDatasource {
@@ -16,5 +17,13 @@ class BasketLocalDataSource extends IBasketDatasource {
   @override
   Future<List<BasketItem>> getAllBasketItem() async {
     return cardBox.values.toList();
+  }
+
+  @override
+  Future<int> getBasketFinalPrice() async {
+    List<BasketItem> productList = cardBox.values.toList();
+    int finalPrice = productList.fold(
+        0, (accumulatoe, product) => accumulatoe + product.realPrice!);
+    return finalPrice;
   }
 }

@@ -7,5 +7,9 @@ class CardInitState extends CardState {}
 
 class CardResponsState extends CardState {
   Either<String, List<BasketItem>> basketItemList;
-  CardResponsState(this.basketItemList);
+  int basketFinalPrice;
+  CardResponsState(
+    this.basketItemList,
+    this.basketFinalPrice,
+  );
 }
