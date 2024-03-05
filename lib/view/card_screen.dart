@@ -91,6 +91,7 @@ class ButtonBuy extends StatelessWidget {
             style: const TextStyle(
               fontFamily: 'sm',
               fontSize: 18.0,
+              color: CustomColors.white,
             ),
           ),
         ),
