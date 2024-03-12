@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/category/category_bloc.dart';
 import 'package:shaparak/bloc/home/home_bloc.dart';
@@ -30,7 +31,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
         index: selectedIndex,
         children: [
           // login screen
-          const LoginScreen(),
+          BlocProvider(
+            create: (context) => AuthBloc(),
+            child: LoginScreen(),
+          ),
           // category screen
           BlocProvider(
             create: (context) => CategoryBloc(),
