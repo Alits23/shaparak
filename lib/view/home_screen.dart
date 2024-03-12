@@ -144,8 +144,8 @@ class AppBar extends StatelessWidget {
 }
 
 class BannerSlider extends StatelessWidget {
-  List<BannerCampaign> listBanner;
-  BannerSlider(this.listBanner, {super.key});
+  final List<BannerCampaign> listBanner;
+  const BannerSlider(this.listBanner, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -220,8 +220,8 @@ class CategoryListTitle extends StatelessWidget {
 }
 
 class CategoryList extends StatelessWidget {
-  List<Category> listCategory;
-  CategoryList(this.listCategory, {super.key});
+  final List<Category> listCategory;
+  const CategoryList(this.listCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -286,8 +286,8 @@ class MostViewTitle extends StatelessWidget {
 }
 
 class MostViewProductList extends StatelessWidget {
-  List<Product> productList;
-  MostViewProductList(
+  final List<Product> productList;
+  const MostViewProductList(
     this.productList, {
     super.key,
   });
@@ -355,8 +355,8 @@ class BestSellerTitle extends StatelessWidget {
 }
 
 class BestSellerProductList extends StatelessWidget {
-  List<Product> productList;
-  BestSellerProductList(
+  final List<Product> productList;
+  const BestSellerProductList(
     this.productList, {
     super.key,
   });

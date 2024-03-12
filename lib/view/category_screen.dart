@@ -66,8 +66,8 @@ class _CategoryscreenState extends State<Categoryscreen> {
 }
 
 class CategoryGrid extends StatelessWidget {
-  List<Category> listCategory;
-  CategoryGrid(this.listCategory, {super.key});
+  final List<Category> listCategory;
+  const CategoryGrid(this.listCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {

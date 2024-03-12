@@ -3,8 +3,6 @@ import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
 import 'package:shaparak/data/model/properties.dart';
-import 'package:shaparak/data/model/variant.dart';
-import 'package:shaparak/data/model/variant_type.dart';
 
 abstract class ProductState {}
 

@@ -10,8 +10,8 @@ import 'package:shaparak/widgets/product_container.dart';
 import '../constans/color.dart';
 
 class ProductListScreen extends StatefulWidget {
-  Category category;
-  ProductListScreen(this.category, {super.key});
+  final Category category;
+  const ProductListScreen(this.category, {super.key});
 
   @override
   State<ProductListScreen> createState() => _ProductListScreenState();
@@ -60,8 +60,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
 }
 
 class ProductGrid extends StatelessWidget {
-  List<Product> productList;
-  ProductGrid(
+  final List<Product> productList;
+  const ProductGrid(
     this.productList, {
     super.key,
   });
@@ -87,8 +87,8 @@ class ProductGrid extends StatelessWidget {
 }
 
 class AppBarProductList extends StatelessWidget {
-  String category;
-  AppBarProductList(
+  final String category;
+  const AppBarProductList(
     this.category, {
     super.key,
   });

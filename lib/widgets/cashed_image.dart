@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../constans/color.dart';
 
 class CashedImage extends StatelessWidget {
-  CashedImage({super.key, this.imageUrl, this.radius = 0});
-  String? imageUrl;
-  double radius;
+  const CashedImage({super.key, this.imageUrl, this.radius = 0});
+  final String? imageUrl;
+  final double radius;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(

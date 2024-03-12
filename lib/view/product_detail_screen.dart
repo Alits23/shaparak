@@ -40,8 +40,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 }
 
 class DetailContentWidget extends StatelessWidget {
-  Product product;
-  DetailContentWidget(
+  final Product product;
+  const DetailContentWidget(
     this.product, {
     super.key,
     required this.parentWidget,
@@ -252,8 +252,8 @@ class PriceTagButton extends StatelessWidget {
 }
 
 class AddToBasketButton extends StatelessWidget {
-  Product product;
-  AddToBasketButton(
+  final Product product;
+  const AddToBasketButton(
     this.product, {
     super.key,
   });
@@ -435,8 +435,8 @@ class UsersComment extends StatelessWidget {
 // InfoProduct
 
 class InfoProduct extends StatefulWidget {
-  String productDescription;
-  InfoProduct(
+  final String productDescription;
+  const InfoProduct(
     this.productDescription, {
     super.key,
   });
@@ -531,8 +531,8 @@ class _InfoProductState extends State<InfoProduct> {
 }
 
 class ProductProperties extends StatefulWidget {
-  List<Properties> productPropertiesList;
-  ProductProperties(
+  final List<Properties> productPropertiesList;
+  const ProductProperties(
     this.productPropertiesList, {
     super.key,
   });
@@ -641,8 +641,8 @@ class _ProductPropertiesState extends State<ProductProperties> {
 }
 
 class VariantContainerGenerator extends StatelessWidget {
-  List<ProductVariant> productVariantList;
-  VariantContainerGenerator(
+  final List<ProductVariant> productVariantList;
+  const VariantContainerGenerator(
     this.productVariantList, {
     super.key,
   });
@@ -666,8 +666,8 @@ class VariantContainerGenerator extends StatelessWidget {
 }
 
 class VariantgeneratorChild extends StatelessWidget {
-  ProductVariant productVariant;
-  VariantgeneratorChild(this.productVariant, {super.key});
+  final ProductVariant productVariant;
+  const VariantgeneratorChild(this.productVariant, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -684,7 +684,7 @@ class VariantgeneratorChild extends StatelessWidget {
             height: 10.0,
           ),
           if (productVariant.variantType.type == VariantTypeEnum.COLOR) ...{
-            colorVariantList(productVariant.variantList)
+            ColorVariantList(productVariant.variantList)
           },
           if (productVariant.variantType.type == VariantTypeEnum.STORAGE) ...{
             StorageVariantList(productVariant.variantList)
@@ -696,10 +696,10 @@ class VariantgeneratorChild extends StatelessWidget {
 }
 
 class GalleryContainer extends StatefulWidget {
-  List<ProductImage> productImageList;
-  String defultImage;
-  int selecetedIndex = 0;
-  GalleryContainer(
+  final List<ProductImage> productImageList;
+  final String defultImage;
+
+  const GalleryContainer(
     this.defultImage,
     this.productImageList, {
     super.key,
@@ -710,6 +710,7 @@ class GalleryContainer extends StatefulWidget {
 }
 
 class _GalleryContainerState extends State<GalleryContainer> {
+  int selecetedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -749,8 +750,7 @@ class _GalleryContainerState extends State<GalleryContainer> {
                           child: CashedImage(
                             imageUrl: (widget.productImageList.isEmpty)
                                 ? widget.defultImage
-                                : widget.productImageList[widget.selecetedIndex]
-                                    .image,
+                                : widget.productImageList[selecetedIndex].image,
                           )),
                     ),
                     const SizedBox(
@@ -774,7 +774,7 @@ class _GalleryContainerState extends State<GalleryContainer> {
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            widget.selecetedIndex = index;
+                            selecetedIndex = index;
                           });
                         },
                         child: Container(
@@ -786,10 +786,10 @@ class _GalleryContainerState extends State<GalleryContainer> {
                             color: CustomColors.white,
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(
-                              color: widget.selecetedIndex == index
+                              color: selecetedIndex == index
                                   ? CustomColors.blue
                                   : CustomColors.gery,
-                              width: widget.selecetedIndex == index ? 2.0 : 1.5,
+                              width: selecetedIndex == index ? 2.0 : 1.5,
                             ),
                           ),
                           child: FittedBox(
@@ -817,8 +817,8 @@ class _GalleryContainerState extends State<GalleryContainer> {
 }
 
 class AppBarProduct extends StatelessWidget {
-  String productTitle;
-  AppBarProduct(
+  final String productTitle;
+  const AppBarProduct(
     this.productTitle, {
     super.key,
   });
@@ -863,15 +863,15 @@ class AppBarProduct extends StatelessWidget {
   }
 }
 
-class colorVariantList extends StatefulWidget {
-  List<Variant> variantList;
-  colorVariantList(this.variantList, {super.key});
+class ColorVariantList extends StatefulWidget {
+  final List<Variant> variantList;
+  const ColorVariantList(this.variantList, {super.key});
 
   @override
-  State<colorVariantList> createState() => _colorVariantListState();
+  State<ColorVariantList> createState() => _ColorVariantListState();
 }
 
-class _colorVariantListState extends State<colorVariantList> {
+class _ColorVariantListState extends State<ColorVariantList> {
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -926,8 +926,8 @@ class _colorVariantListState extends State<colorVariantList> {
 }
 
 class StorageVariantList extends StatefulWidget {
-  List<Variant> storageVariantList;
-  StorageVariantList(this.storageVariantList, {super.key});
+  final List<Variant> storageVariantList;
+  const StorageVariantList(this.storageVariantList, {super.key});
 
   @override
   State<StorageVariantList> createState() => _StorageVariantListState();

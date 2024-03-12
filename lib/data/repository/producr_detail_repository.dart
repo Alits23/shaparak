@@ -43,6 +43,7 @@ class ProductDetailRepository extends IProductDetailRepository {
   }
 
   @override
+  // ignore: override_on_non_overriding_member
   Future<Either<String, List<Variant>>> getVariant(String productId) async {
     try {
       var response = await _datasource.getVarinat(productId);

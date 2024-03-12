@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/bloc/product_list/product_list_bloc.dart';
 import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
-import '../view/category_screen.dart';
-
 class CategoryItems extends StatelessWidget {
-  Category category;
-  CategoryItems(this.category, {super.key});
+  final Category category;
+  const CategoryItems(this.category, {super.key});
 
   @override
   Widget build(BuildContext context) {

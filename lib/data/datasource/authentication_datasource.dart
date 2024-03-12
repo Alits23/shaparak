@@ -25,6 +25,7 @@ class AuthDatasourceRemote extends IAuthDatasource {
     String passwordConfirm,
   ) async {
     try {
+      // ignore: unused_local_variable
       var response = await _dio.post(
         'collections/users/records',
         data: {

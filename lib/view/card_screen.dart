@@ -59,8 +59,8 @@ class CardScreen extends StatelessWidget {
 }
 
 class ButtonBuy extends StatelessWidget {
-  int finalPrice;
-  ButtonBuy(
+  final int finalPrice;
+  const ButtonBuy(
     this.finalPrice, {
     super.key,
   });
@@ -147,8 +147,8 @@ class AppBarCard extends StatelessWidget {
 }
 
 class CardItem extends StatelessWidget {
-  BasketItem basketItem;
-  CardItem(
+  final BasketItem basketItem;
+  const CardItem(
     this.basketItem, {
     super.key,
   });
@@ -241,10 +241,10 @@ class CardItem extends StatelessWidget {
                         const SizedBox(
                           height: 12.0,
                         ),
-                        Wrap(
+                        const Wrap(
                           spacing: 8,
                           children: [
-                            const DeleteProduct(),
+                            DeleteProduct(),
                             OptionCheap('آبی فیروزه ای', color: '4287f5'),
                           ],
                         ),
@@ -349,9 +349,9 @@ class DeleteProduct extends StatelessWidget {
 }
 
 class OptionCheap extends StatelessWidget {
-  String title;
-  String? color;
-  OptionCheap(this.title, {super.key, this.color});
+  final String title;
+  final String? color;
+  const OptionCheap(this.title, {super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
