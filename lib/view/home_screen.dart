@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/bloc/home/home_state.dart';
@@ -33,58 +34,76 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
-            return CustomScrollView(
-              slivers: [
-                const AppBar(),
-                if (state is HomeLoadingState) ...{
-                  const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+            return state is HomeLoadingState
+                ? const Center(
+                    child: LoadingAnimation(),
                   )
-                },
-                if (state is HomeResponseState) ...{
-                  state.bannerlist.fold((l) {
-                    return SliverToBoxAdapter(
-                      child: Center(child: Text(l)),
-                    );
-                  }, (r) {
-                    return BannerSlider(r);
-                  })
-                },
-                const CategoryListTitle(),
-                if (state is HomeResponseState) ...{
-                  state.categoryList.fold((l) {
-                    return SliverToBoxAdapter(
-                      child: Center(child: Text(l)),
-                    );
-                  }, (r) {
-                    return CategoryList(r);
-                  })
-                },
-                const MostViewTitle(),
-                if (state is HomeResponseState) ...{
-                  state.productListHotest.fold((l) {
-                    return SliverToBoxAdapter(
-                      child: Center(child: Text(l)),
-                    );
-                  }, (r) {
-                    return MostViewProductList(r);
-                  })
-                },
-                const BestSellerTitle(),
-                if (state is HomeResponseState) ...{
-                  state.productListBestSeller.fold((l) {
-                    return SliverToBoxAdapter(
-                      child: Center(child: Text(l)),
-                    );
-                  }, (r) {
-                    return BestSellerProductList(r);
-                  })
-                }
-              ],
-            );
+                : CustomScrollView(
+                    slivers: [
+                      const AppBar(),
+                      if (state is HomeResponseState) ...{
+                        state.bannerlist.fold((l) {
+                          return SliverToBoxAdapter(
+                            child: Center(child: Text(l)),
+                          );
+                        }, (r) {
+                          return BannerSlider(r);
+                        })
+                      },
+                      const CategoryListTitle(),
+                      if (state is HomeResponseState) ...{
+                        state.categoryList.fold((l) {
+                          return SliverToBoxAdapter(
+                            child: Center(child: Text(l)),
+                          );
+                        }, (r) {
+                          return CategoryList(r);
+                        })
+                      },
+                      const MostViewTitle(),
+                      if (state is HomeResponseState) ...{
+                        state.productListHotest.fold((l) {
+                          return SliverToBoxAdapter(
+                            child: Center(child: Text(l)),
+                          );
+                        }, (r) {
+                          return MostViewProductList(r);
+                        })
+                      },
+                      const BestSellerTitle(),
+                      if (state is HomeResponseState) ...{
+                        state.productListBestSeller.fold((l) {
+                          return SliverToBoxAdapter(
+                            child: Center(child: Text(l)),
+                          );
+                        }, (r) {
+                          return BestSellerProductList(r);
+                        })
+                      }
+                    ],
+                  );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingAnimation extends StatelessWidget {
+  const LoadingAnimation({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: 60.0,
+      height: 60.0,
+      child: Center(
+        child: LoadingIndicator(
+          indicatorType: Indicator.ballRotateChase,
+          colors: [CustomColors.blue],
+          strokeWidth: 1,
         ),
       ),
     );
