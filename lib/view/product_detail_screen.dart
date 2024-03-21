@@ -8,6 +8,7 @@ import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/comment.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
@@ -130,7 +131,13 @@ class DetailScreenContent extends StatelessWidget {
                   InfoProduct(parentWidget.product.description),
                 },
                 if (state is ProductResponseState) ...{
-                  const UsersComment(),
+                  state.getComment.fold((l) {
+                    return SliverToBoxAdapter(
+                      child: Text(l),
+                    );
+                  }, (commentList) {
+                    return UsersComment(commentList);
+                  })
                 },
                 if (state is ProductResponseState) ...{
                   SliverToBoxAdapter(
@@ -312,127 +319,186 @@ class AddToBasketButton extends StatelessWidget {
   }
 }
 
-class UsersComment extends StatelessWidget {
-  const UsersComment({
+class UsersComment extends StatefulWidget {
+  List<Comment> commentList;
+  UsersComment(
+    this.commentList, {
     super.key,
   });
 
   @override
+  State<UsersComment> createState() => _UsersCommentState();
+}
+
+class _UsersCommentState extends State<UsersComment> {
+  bool _visibleComment = false;
+  @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
-        child: Container(
-          height: 46,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            border: Border.all(
-              width: 1,
-              color: CustomColors.gery,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  _visibleComment = !_visibleComment;
+                });
+              },
+              child: Container(
+                height: 46,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  border: Border.all(
+                    width: 1,
+                    color: CustomColors.gery,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    (_visibleComment)
+                        ? Image.asset('assets/images/icon_down_categroy.png')
+                        : Image.asset('assets/images/icon_left_categroy.png'),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text(
+                      'مشاهده',
+                      style: TextStyle(
+                          fontFamily: 'sm',
+                          fontSize: 12,
+                          color: CustomColors.blue),
+                    ),
+                    const Spacer(),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 10.0),
+                          width: 26.0,
+                          height: 26.0,
+                          decoration: BoxDecoration(
+                            color: CustomColors.red,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        Positioned(
+                          right: 15.0,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: 26.0,
+                            height: 26.0,
+                            decoration: BoxDecoration(
+                              color: CustomColors.green,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 30.0,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: 26.0,
+                            height: 26.0,
+                            decoration: BoxDecoration(
+                              color: CustomColors.blue,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 45.0,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: 26.0,
+                            height: 26.0,
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 60.0,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            width: 26.0,
+                            height: 26.0,
+                            decoration: BoxDecoration(
+                              color: CustomColors.gery,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                '+10',
+                                style: TextStyle(
+                                  color: CustomColors.white,
+                                  fontFamily: 'sb',
+                                  fontSize: 12.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text(
+                      ': نظرات کاربران',
+                      style: TextStyle(
+                        fontFamily: 'sb',
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 10,
+          Visibility(
+            visible: _visibleComment,
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 24.0, left: 44.0, right: 44.0),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  width: 1,
+                  color: CustomColors.gery,
+                ),
               ),
-              Image.asset('assets/images/icon_left_categroy.png'),
-              const SizedBox(
-                width: 10,
-              ),
-              const Text(
-                'مشاهده',
-                style: TextStyle(
-                    fontFamily: 'sm', fontSize: 12, color: CustomColors.blue),
-              ),
-              const Spacer(),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 10.0),
-                    width: 26.0,
-                    height: 26.0,
-                    decoration: BoxDecoration(
-                      color: CustomColors.red,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  Positioned(
-                    right: 15.0,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10.0),
-                      width: 26.0,
-                      height: 26.0,
-                      decoration: BoxDecoration(
-                        color: CustomColors.green,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 30.0,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10.0),
-                      width: 26.0,
-                      height: 26.0,
-                      decoration: BoxDecoration(
-                        color: CustomColors.blue,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 45.0,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10.0),
-                      width: 26.0,
-                      height: 26.0,
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 60.0,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 10.0),
-                      width: 26.0,
-                      height: 26.0,
-                      decoration: BoxDecoration(
-                        color: CustomColors.gery,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Center(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.commentList.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Flexible(
                         child: Text(
-                          '+10',
-                          style: TextStyle(
-                            color: CustomColors.white,
-                            fontFamily: 'sb',
-                            fontSize: 12.0,
+                          '${widget.commentList[index].userid} : ${widget.commentList[index].text}',
+                          style: const TextStyle(
+                            fontFamily: 'sm',
+                            fontSize: 14.0,
+                            height: 1.8,
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              const Text(
-                ': نظرات کاربران',
-                style: TextStyle(
-                  fontFamily: 'sb',
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -607,38 +673,38 @@ class _ProductPropertiesState extends State<ProductProperties> {
           Visibility(
             visible: _visiblePorperty,
             child: Container(
-                width: double.infinity,
-                margin:
-                    const EdgeInsets.only(top: 24.0, left: 44.0, right: 44.0),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    width: 1,
-                    color: CustomColors.gery,
-                  ),
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 24.0, left: 44.0, right: 44.0),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  width: 1,
+                  color: CustomColors.gery,
                 ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.productPropertiesList.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      textDirection: TextDirection.rtl,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            '${widget.productPropertiesList[index].value} : ${widget.productPropertiesList[index].title}',
-                            style: const TextStyle(
-                              fontFamily: 'sm',
-                              fontSize: 14.0,
-                              height: 1.8,
-                            ),
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.productPropertiesList.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          '${widget.productPropertiesList[index].value} : ${widget.productPropertiesList[index].title}',
+                          style: const TextStyle(
+                            fontFamily: 'sm',
+                            fontSize: 14.0,
+                            height: 1.8,
                           ),
                         ),
-                      ],
-                    );
-                  },
-                )),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),

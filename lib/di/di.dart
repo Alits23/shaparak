@@ -5,12 +5,14 @@ import 'package:shaparak/data/datasource/authentication_datasource.dart';
 import 'package:shaparak/data/datasource/banner_datasource.dart';
 import 'package:shaparak/data/datasource/basket_datasource.dart';
 import 'package:shaparak/data/datasource/category_datasource.dart';
+import 'package:shaparak/data/datasource/comment_datasource.dart';
 import 'package:shaparak/data/datasource/product_datasource.dart';
 import 'package:shaparak/data/datasource/product_detail_datasource.dart';
 import 'package:shaparak/data/repository/authentication_repository.dart';
 import 'package:shaparak/data/repository/banner_repository.dart';
 import 'package:shaparak/data/repository/basket_repository.dart';
 import 'package:shaparak/data/repository/category_repository.dart';
+import 'package:shaparak/data/repository/comment_repository.dart';
 import 'package:shaparak/data/repository/producr_detail_repository.dart';
 import 'package:shaparak/data/repository/product_repository.dart';
 import 'package:shaparak/util/payment_handler.dart';
@@ -54,6 +56,7 @@ void _initDatasource() {
       () => ProductDetailDatasourceRemote());
   locator.registerFactory<IBasketDatasource>(() => BasketLocalDataSource());
   locator.registerFactory<IAuthDatasource>(() => AuthDatasourceRemote());
+  locator.registerFactory<ICommentDatasource>(() => CommentDatasourceRemote());
 }
 
 void _initRepository() {
@@ -64,4 +67,5 @@ void _initRepository() {
       () => ProductDetailRepository());
   locator.registerFactory<IBasketRepository>(() => BasketRepository());
   locator.registerFactory<IAuthRepository>(() => AuthRepository());
+  locator.registerFactory<ICommentRepository>(() => CommentRepository());
 }
