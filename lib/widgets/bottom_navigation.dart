@@ -6,6 +6,7 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/category/category_bloc.dart';
 import 'package:shaparak/bloc/home/home_bloc.dart';
+import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/view/card_screen.dart';
 import 'package:shaparak/view/category_screen.dart';
@@ -51,7 +52,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
           ),
           //home screen
           BlocProvider(
-            create: (context) => HomeBloc(),
+            create: (context) {
+              var bloc = HomeBloc();
+              bloc.add(HomeRequestList());
+              return bloc;
+            },
             child: const HomeScreen(),
           ),
         ],

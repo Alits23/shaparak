@@ -13,19 +13,8 @@ import '../data/model/banner.dart';
 import '../widgets/cashed_image.dart';
 import '../widgets/product_container.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(HomeRequestList());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,49 +27,54 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? const Center(
                     child: LoadingAnimation(),
                   )
-                : CustomScrollView(
-                    slivers: [
-                      const AppBar(),
-                      if (state is HomeResponseState) ...{
-                        state.bannerlist.fold((l) {
-                          return SliverToBoxAdapter(
-                            child: Center(child: Text(l)),
-                          );
-                        }, (r) {
-                          return BannerSlider(r);
-                        })
-                      },
-                      const CategoryListTitle(),
-                      if (state is HomeResponseState) ...{
-                        state.categoryList.fold((l) {
-                          return SliverToBoxAdapter(
-                            child: Center(child: Text(l)),
-                          );
-                        }, (r) {
-                          return CategoryList(r);
-                        })
-                      },
-                      const MostViewTitle(),
-                      if (state is HomeResponseState) ...{
-                        state.productListHotest.fold((l) {
-                          return SliverToBoxAdapter(
-                            child: Center(child: Text(l)),
-                          );
-                        }, (r) {
-                          return MostViewProductList(r);
-                        })
-                      },
-                      const BestSellerTitle(),
-                      if (state is HomeResponseState) ...{
-                        state.productListBestSeller.fold((l) {
-                          return SliverToBoxAdapter(
-                            child: Center(child: Text(l)),
-                          );
-                        }, (r) {
-                          return BestSellerProductList(r);
-                        })
-                      }
-                    ],
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<HomeBloc>().add(HomeRequestList());
+                    },
+                    child: CustomScrollView(
+                      slivers: [
+                        const AppBar(),
+                        if (state is HomeResponseState) ...{
+                          state.bannerlist.fold((l) {
+                            return SliverToBoxAdapter(
+                              child: Center(child: Text(l)),
+                            );
+                          }, (r) {
+                            return BannerSlider(r);
+                          })
+                        },
+                        const CategoryListTitle(),
+                        if (state is HomeResponseState) ...{
+                          state.categoryList.fold((l) {
+                            return SliverToBoxAdapter(
+                              child: Center(child: Text(l)),
+                            );
+                          }, (r) {
+                            return CategoryList(r);
+                          })
+                        },
+                        const MostViewTitle(),
+                        if (state is HomeResponseState) ...{
+                          state.productListHotest.fold((l) {
+                            return SliverToBoxAdapter(
+                              child: Center(child: Text(l)),
+                            );
+                          }, (r) {
+                            return MostViewProductList(r);
+                          })
+                        },
+                        const BestSellerTitle(),
+                        if (state is HomeResponseState) ...{
+                          state.productListBestSeller.fold((l) {
+                            return SliverToBoxAdapter(
+                              child: Center(child: Text(l)),
+                            );
+                          }, (r) {
+                            return BestSellerProductList(r);
+                          })
+                        }
+                      ],
+                    ),
                   );
           },
         ),

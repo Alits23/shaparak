@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/di/di.dart';
+import 'package:shaparak/util/extenstions/int_extensions.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
 import '../constans/color.dart';
@@ -136,7 +137,7 @@ class ProductContainer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${product.price}',
+                            product.price.convertToPrice(),
                             style: const TextStyle(
                                 color: CustomColors.white,
                                 fontSize: 12.0,
@@ -144,7 +145,7 @@ class ProductContainer extends StatelessWidget {
                                 fontFamily: 'sm'),
                           ),
                           Text(
-                            '${product.realPrice}',
+                            product.realPrice!.convertToPrice(),
                             style: const TextStyle(
                                 color: CustomColors.white,
                                 fontSize: 16.0,
