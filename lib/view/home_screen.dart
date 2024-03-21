@@ -8,6 +8,7 @@ import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/widgets/category_items.dart';
+import 'package:shaparak/widgets/loading_animation.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../data/model/banner.dart';
 import '../widgets/cashed_image.dart';
@@ -77,27 +78,6 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class LoadingAnimation extends StatelessWidget {
-  const LoadingAnimation({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 60.0,
-      height: 60.0,
-      child: Center(
-        child: LoadingIndicator(
-          indicatorType: Indicator.ballRotateChase,
-          colors: [CustomColors.blue],
-          strokeWidth: 1,
         ),
       ),
     );

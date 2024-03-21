@@ -15,6 +15,7 @@ import 'package:shaparak/data/model/properties.dart';
 import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
+import 'package:shaparak/widgets/loading_animation.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -34,14 +35,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ProductRequestList(widget.product.id, widget.product.category));
         return bloc;
       },
-      child: DetailContentWidget(widget.product, parentWidget: widget),
+      child: DetailScreenContent(widget.product, parentWidget: widget),
     );
   }
 }
 
-class DetailContentWidget extends StatelessWidget {
+class DetailScreenContent extends StatelessWidget {
   final Product product;
-  const DetailContentWidget(
+  const DetailScreenContent(
     this.product, {
     super.key,
     required this.parentWidget,
@@ -55,16 +56,12 @@ class DetailContentWidget extends StatelessWidget {
       backgroundColor: CustomColors.backgroundScreenColor,
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
+          if (state is ProductLoadingState) {
+            return const Center(child: LoadingAnimation());
+          }
           return SafeArea(
             child: CustomScrollView(
               slivers: [
-                if (state is ProductLoadingState) ...{
-                  const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                },
                 if (state is ProductResponseState) ...{
                   state.categoryId.fold((l) {
                     return const SliverToBoxAdapter(
@@ -82,21 +79,23 @@ class DetailContentWidget extends StatelessWidget {
                     return AppBarProduct(productCategory.title);
                   })
                 },
-                SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Text(
-                        parentWidget.product.name,
-                        style: const TextStyle(
-                          fontFamily: 'sb',
-                          fontSize: 16.0,
-                          color: Colors.black,
+                if (state is ProductResponseState) ...{
+                  SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Text(
+                          parentWidget.product.name,
+                          style: const TextStyle(
+                            fontFamily: 'sb',
+                            fontSize: 16.0,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
+                },
                 if (state is ProductResponseState) ...{
                   state.productImages.fold((l) {
                     return SliverToBoxAdapter(
@@ -127,22 +126,29 @@ class DetailContentWidget extends StatelessWidget {
                     return ProductProperties(propertyList);
                   })
                 },
-                InfoProduct(parentWidget.product.description),
-                const UsersComment(),
-                SliverToBoxAdapter(
+                if (state is ProductResponseState) ...{
+                  InfoProduct(parentWidget.product.description),
+                },
+                if (state is ProductResponseState) ...{
+                  const UsersComment(),
+                },
+                if (state is ProductResponseState) ...{
+                  SliverToBoxAdapter(
                     child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      PriceTagButton(product),
-                      const SizedBox(
-                        width: 5.0,
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PriceTagButton(product),
+                          const SizedBox(
+                            width: 5.0,
+                          ),
+                          AddToBasketButton(parentWidget.product),
+                        ],
                       ),
-                      AddToBasketButton(parentWidget.product),
-                    ],
+                    ),
                   ),
-                ))
+                },
               ],
             ),
           );
