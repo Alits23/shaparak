@@ -30,6 +30,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return BlocBuilder<ProductListBloc, ProductListState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: CustomColors.backgroundScreenColor,
           body: SafeArea(
             child: CustomScrollView(
               slivers: [

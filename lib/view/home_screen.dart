@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:shaparak/bloc/home/home_bloc.dart';
 import 'package:shaparak/bloc/home/home_event.dart';
 import 'package:shaparak/bloc/home/home_state.dart';

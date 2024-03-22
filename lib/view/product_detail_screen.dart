@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
+import 'package:shaparak/bloc/comment/comment_bloc.dart';
+import 'package:shaparak/bloc/comment/comment_event.dart';
+import 'package:shaparak/bloc/comment/comment_state.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
@@ -15,6 +18,7 @@ import 'package:shaparak/data/model/product_variant.dart';
 import 'package:shaparak/data/model/properties.dart';
 import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
+import 'package:shaparak/di/di.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import 'package:shaparak/widgets/loading_animation.dart';
 
@@ -43,13 +47,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
 class DetailScreenContent extends StatelessWidget {
   final Product product;
+  final ProductDetailScreen parentWidget;
   const DetailScreenContent(
     this.product, {
     super.key,
     required this.parentWidget,
   });
-
-  final ProductDetailScreen parentWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -131,13 +134,7 @@ class DetailScreenContent extends StatelessWidget {
                   InfoProduct(parentWidget.product.description),
                 },
                 if (state is ProductResponseState) ...{
-                  state.getComment.fold((l) {
-                    return SliverToBoxAdapter(
-                      child: Text(l),
-                    );
-                  }, (commentList) {
-                    return UsersComment(commentList);
-                  })
+                  UsersComment(product: product),
                 },
                 if (state is ProductResponseState) ...{
                   SliverToBoxAdapter(
@@ -320,10 +317,10 @@ class AddToBasketButton extends StatelessWidget {
 }
 
 class UsersComment extends StatefulWidget {
-  List<Comment> commentList;
-  UsersComment(
-    this.commentList, {
+  final Product product;
+  const UsersComment({
     super.key,
+    required this.product,
   });
 
   @override
@@ -331,175 +328,193 @@ class UsersComment extends StatefulWidget {
 }
 
 class _UsersCommentState extends State<UsersComment> {
-  bool _visibleComment = false;
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  _visibleComment = !_visibleComment;
-                });
-              },
-              child: Container(
-                height: 46,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    width: 1,
-                    color: CustomColors.gery,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 44.0, right: 44.0),
+        child: InkWell(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return BlocProvider(
+                  create: (context) {
+                    CommentBloc(locator.get());
+                    final bloc = CommentBloc(locator.get());
+                    bloc.add(CommentRequestList(widget.product.id));
+                    return bloc;
+                  },
+                  child: DraggableScrollableSheet(
+                    initialChildSize: 0.5,
+                    minChildSize: 0.2,
+                    maxChildSize: 0.7,
+                    builder: (context, scrollController) {
+                      return CommentBottomSheet(scrollController);
+                    },
                   ),
+                );
+              },
+            );
+          },
+          child: Container(
+            height: 46,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              border: Border.all(
+                width: 1,
+                color: CustomColors.gery,
+              ),
+            ),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 10,
                 ),
-                child: Row(
+                Image.asset('assets/images/icon_left_categroy.png'),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text(
+                  'مشاهده',
+                  style: TextStyle(
+                      fontFamily: 'sm', fontSize: 12, color: CustomColors.blue),
+                ),
+                const Spacer(),
+                Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    (_visibleComment)
-                        ? Image.asset('assets/images/icon_down_categroy.png')
-                        : Image.asset('assets/images/icon_left_categroy.png'),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      'مشاهده',
-                      style: TextStyle(
-                          fontFamily: 'sm',
-                          fontSize: 12,
-                          color: CustomColors.blue),
-                    ),
-                    const Spacer(),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(left: 10.0),
-                          width: 26.0,
-                          height: 26.0,
-                          decoration: BoxDecoration(
-                            color: CustomColors.red,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        Positioned(
-                          right: 15.0,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 26.0,
-                            height: 26.0,
-                            decoration: BoxDecoration(
-                              color: CustomColors.green,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 30.0,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 26.0,
-                            height: 26.0,
-                            decoration: BoxDecoration(
-                              color: CustomColors.blue,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 45.0,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 26.0,
-                            height: 26.0,
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 60.0,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10.0),
-                            width: 26.0,
-                            height: 26.0,
-                            decoration: BoxDecoration(
-                              color: CustomColors.gery,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                '+10',
-                                style: TextStyle(
-                                  color: CustomColors.white,
-                                  fontFamily: 'sb',
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      ': نظرات کاربران',
-                      style: TextStyle(
-                        fontFamily: 'sb',
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0),
+                      width: 26.0,
+                      height: 26.0,
+                      decoration: BoxDecoration(
+                        color: CustomColors.red,
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
+                    Positioned(
+                      right: 15.0,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        width: 26.0,
+                        height: 26.0,
+                        decoration: BoxDecoration(
+                          color: CustomColors.green,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 30.0,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        width: 26.0,
+                        height: 26.0,
+                        decoration: BoxDecoration(
+                          color: CustomColors.blue,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 45.0,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        width: 26.0,
+                        height: 26.0,
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 60.0,
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 10.0),
+                        width: 26.0,
+                        height: 26.0,
+                        decoration: BoxDecoration(
+                          color: CustomColors.gery,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            '+10',
+                            style: TextStyle(
+                              color: CustomColors.white,
+                              fontFamily: 'sb',
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: _visibleComment,
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(top: 24.0, left: 44.0, right: 44.0),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                border: Border.all(
-                  width: 1,
-                  color: CustomColors.gery,
+                const SizedBox(
+                  width: 10,
                 ),
-              ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.commentList.length,
-                itemBuilder: (context, index) {
-                  return Row(
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          '${widget.commentList[index].userid} : ${widget.commentList[index].text}',
-                          style: const TextStyle(
-                            fontFamily: 'sm',
-                            fontSize: 14.0,
-                            height: 1.8,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                const Text(
+                  ': نظرات کاربران',
+                  style: TextStyle(
+                    fontFamily: 'sb',
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class CommentBottomSheet extends StatelessWidget {
+  final ScrollController controller;
+  const CommentBottomSheet(
+    this.controller, {
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CommentBloc, CommentState>(
+      builder: (context, state) {
+        if (state is CommentLoadingState) {
+          return const Center(
+            child: LoadingAnimation(),
+          );
+        }
+        return CustomScrollView(
+          controller: controller,
+          slivers: [
+            if (state is CommentResponseState) ...{
+              state.getComment.fold((l) {
+                return SliverToBoxAdapter(
+                  child: Text(l),
+                );
+              }, (commentList) {
+                if (commentList.isEmpty) {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: Text('نظری ثبت نشده است'),
+                    ),
+                  );
+                }
+                return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        childCount: commentList.length, (context, index) {
+                  return Text(commentList[index].text);
+                }));
+              })
+            }
+          ],
+        );
+      },
     );
   }
 }

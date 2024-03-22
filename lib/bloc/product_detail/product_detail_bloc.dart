@@ -11,7 +11,6 @@ import '../../data/model/basket_item.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final IProductDetailRepository _detailRepository = locator.get();
   final IBasketRepository _basketRepository = locator.get();
-  final ICommentRepository _commentRepository = locator.get();
   ProductBloc() : super(ProductInitState()) {
     on<ProductRequestList>(
       (event, emit) async {
@@ -24,14 +23,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             await _detailRepository.getProductCategory(event.categoryId);
         var productProperties =
             await _detailRepository.getProductProperties(event.productId);
-        var getComment = await _commentRepository.getComment(event.productId);
+
         emit(
           ProductResponseState(
             productImages,
             productVariant,
             categoryId,
             productProperties,
-            getComment,
           ),
         );
       },
