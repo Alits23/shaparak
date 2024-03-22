@@ -12,7 +12,10 @@ class CommentDatasourceRemote extends ICommentDatasource {
 
   @override
   Future<List<Comment>> getComment(String productid) async {
-    Map<String, String> qParams = {'filter': 'product_id="$productid"'};
+    Map<String, String> qParams = {
+      'filter': 'product_id="$productid"',
+      'expand': 'user_id'
+    };
     try {
       var response = await _dio.get('collections/comment/records',
           queryParameters: qParams);

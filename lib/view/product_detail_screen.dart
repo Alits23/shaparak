@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
@@ -11,7 +13,6 @@ import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
-import 'package:shaparak/data/model/comment.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
@@ -336,6 +337,7 @@ class _UsersCommentState extends State<UsersComment> {
         child: InkWell(
           onTap: () {
             showModalBottomSheet(
+              backgroundColor: CustomColors.backgroundScreenColor,
               context: context,
               builder: (context) {
                 return BlocProvider(
@@ -493,25 +495,76 @@ class CommentBottomSheet extends StatelessWidget {
           controller: controller,
           slivers: [
             if (state is CommentResponseState) ...{
-              state.getComment.fold((l) {
-                return SliverToBoxAdapter(
-                  child: Text(l),
-                );
-              }, (commentList) {
-                if (commentList.isEmpty) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: Text('نظری ثبت نشده است'),
+              state.getComment.fold(
+                (l) {
+                  return SliverToBoxAdapter(
+                    child: Text(l),
+                  );
+                },
+                (commentList) {
+                  if (commentList.isEmpty) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Text('نظری ثبت نشده است'),
+                      ),
+                    );
+                  }
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.all(16.0),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: CustomColors.white,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      (commentList[index].username.isEmpty)
+                                          ? 'کاربر'
+                                          : commentList[index].username,
+                                      style: const TextStyle(fontFamily: 'sb'),
+                                    ),
+                                    const SizedBox(
+                                      height: 8.0,
+                                    ),
+                                    Text(
+                                      commentList[index].text,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 16.0,
+                              ),
+                              SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: (commentList[index].avatar.isEmpty)
+                                      ? Image.asset('assets/images/avatar.png')
+                                      : CashedImage(
+                                          imageUrl: commentList[index]
+                                              .userThumbnailUrl,
+                                        )),
+                            ],
+                          ),
+                        );
+                      },
+                      childCount: commentList.length,
                     ),
                   );
-                }
-                return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        childCount: commentList.length, (context, index) {
-                  return Text(commentList[index].text);
-                }));
-              })
-            }
+                },
+              ),
+            },
           ],
         );
       },
