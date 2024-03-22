@@ -6,6 +6,7 @@ import 'package:shaparak/util/api_exception.dart';
 
 abstract class ICommentRepository {
   Future<Either<String, List<Comment>>> getComment(String productid);
+  Future<Either<String, String>> postComment(String comment, String productid);
 }
 
 class CommentRepository extends ICommentRepository {
@@ -15,6 +16,17 @@ class CommentRepository extends ICommentRepository {
     try {
       var response = await _datasource.getComment(productid);
       return right(response);
+    } on ApiException catch (ex) {
+      return left(ex.message ?? 'خطای ناشناخته');
+    }
+  }
+
+  @override
+  Future<Either<String, String>> postComment(
+      String comment, String productid) async {
+    try {
+      var response = await _datasource.postComment(comment, productid);
+      return right('نظر شما ثبت شد');
     } on ApiException catch (ex) {
       return left(ex.message ?? 'خطای ناشناخته');
     }

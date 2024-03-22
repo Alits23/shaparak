@@ -5,6 +5,7 @@ import 'package:shaparak/util/api_exception.dart';
 
 abstract class ICommentDatasource {
   Future<List<Comment>> getComment(String productid);
+  Future<void> postComment(String comment, String productid);
 }
 
 class CommentDatasourceRemote extends ICommentDatasource {
@@ -26,6 +27,27 @@ class CommentDatasourceRemote extends ICommentDatasource {
       throw ApiException(
         ex.response?.statusCode,
         ex.response?.data['message'],
+      );
+    } catch (ex) {
+      throw ApiException(0, 'unknow error');
+    }
+  }
+
+  @override
+  Future<void> postComment(String comment, String productid) async {
+    try {
+      var response = await _dio.post(
+        'collections/comment/records',
+        data: {
+          'text': comment,
+          'user_id': 'qcft6hutapro7p6',
+          'product_id': productid,
+        },
+      );
+    } on DioException catch (ex) {
+      throw ApiException(
+        ex.response?.statusCode,
+        ex.response?.data['data']['username']['message'],
       );
     } catch (ex) {
       throw ApiException(0, 'unknow error');
