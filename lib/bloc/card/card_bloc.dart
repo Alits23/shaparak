@@ -21,14 +21,25 @@ class CardBloc extends Bloc<CardEvent, CardState> {
 
     on<CardPaymentInitEvent>(
       (event, emit) async {
-        _paymentHandler.initPaymentRequest();
+        var finalPrice = await _basketRepository.getBasketFinalPrice();
+        _paymentHandler.initPaymentRequest(finalPrice);
       },
     );
 
     on<CardPaymentRequestEvent>(
-      (event, emit) {
+      (event, emit) async {
         _paymentHandler.sendPaymentRequest();
       },
     );
+
+    on<CardRemoveProductEvent>((event, emit) async {
+      _basketRepository.removeProduct(event.index);
+      var basketItemList = await _basketRepository.getAllBasketItem();
+      var finalPrice = await _basketRepository.getBasketFinalPrice();
+      emit(CardResponsState(
+        basketItemList,
+        finalPrice,
+      ));
+    });
   }
 }

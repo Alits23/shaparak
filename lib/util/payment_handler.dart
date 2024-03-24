@@ -4,7 +4,7 @@ import 'package:uni_links/uni_links.dart';
 import 'package:zarinpal/zarinpal.dart';
 
 abstract class PaymentHandler {
-  Future<void> initPaymentRequest();
+  Future<void> initPaymentRequest(int finalPrice);
   Future<void> sendPaymentRequest();
   Future<void> verifyPaymentRequest();
 }
@@ -16,11 +16,12 @@ class ZarinPalPaymentHandler extends PaymentHandler {
   UrlHandler urlHandler;
   ZarinPalPaymentHandler(this.urlHandler);
   @override
-  Future<void> initPaymentRequest() async {
+  Future<void> initPaymentRequest(int finalPrice) async {
     //setisSandBox baraye shabeh sazie
     _paymentRequest.setIsSandBox(true);
-    _paymentRequest.setAmount(1000);
+    _paymentRequest.setAmount(finalPrice);
     _paymentRequest.setDescription('this is for app shaparak :)');
+    // 'd645fba8-1b29-11ea-be59-000c295eb8fc'
     _paymentRequest.setMerchantID('d645fba8-1b29-11ea-be59-000c305eb8fc');
     _paymentRequest.setCallbackURL('expertflutter://shop');
     linkStream.listen((deeplink) {

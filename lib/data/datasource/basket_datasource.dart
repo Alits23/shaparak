@@ -5,6 +5,7 @@ abstract class IBasketDatasource {
   Future<void> addProduct(BasketItem basketItem);
   Future<List<BasketItem>> getAllBasketItem();
   Future<int> getBasketFinalPrice();
+  Future<void> removeProduct(int index);
 }
 
 class BasketLocalDataSource extends IBasketDatasource {
@@ -25,5 +26,10 @@ class BasketLocalDataSource extends IBasketDatasource {
     int finalPrice = productList.fold(
         0, (accumulatoe, product) => accumulatoe + product.realPrice!);
     return finalPrice;
+  }
+
+  @override
+  Future<void> removeProduct(int index) async {
+    cardBox.deleteAt(index);
   }
 }

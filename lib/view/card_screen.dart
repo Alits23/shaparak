@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/card/card_state.dart';
+import 'package:shaparak/util/extenstions/int_extensions.dart';
 import 'package:shaparak/util/extenstions/string_extensions.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
@@ -35,7 +36,7 @@ class CardScreen extends StatelessWidget {
                           delegate: SliverChildBuilderDelegate(
                             childCount: basketItemList.length,
                             (context, index) {
-                              return CardItem(basketItemList[index]);
+                              return CardItem(basketItemList[index], index);
                             },
                           ),
                         );
@@ -88,7 +89,9 @@ class ButtonBuy extends StatelessWidget {
             context.read<CardBloc>().add(CardPaymentRequestEvent());
           },
           child: Text(
-            (finalPrice == 0) ? '!!! سبد خرید شما خالیه ' : '$finalPrice',
+            (finalPrice == 0)
+                ? '!!! سبد خرید شما خالیه '
+                : 'پرداخت  : ${finalPrice.convertToPrice()}',
             style: const TextStyle(
               fontFamily: 'sm',
               fontSize: 18.0,
@@ -147,9 +150,11 @@ class AppBarCard extends StatelessWidget {
 }
 
 class CardItem extends StatelessWidget {
+  final int index;
   final BasketItem basketItem;
   const CardItem(
-    this.basketItem, {
+    this.basketItem,
+    this.index, {
     super.key,
   });
 
@@ -230,7 +235,7 @@ class CardItem extends StatelessWidget {
                               width: 4.0,
                             ),
                             Text(
-                              '${basketItem.price}',
+                              basketItem.price!.convertToPrice(),
                               style: const TextStyle(
                                 fontFamily: 'sm',
                                 fontSize: 12,
@@ -241,11 +246,11 @@ class CardItem extends StatelessWidget {
                         const SizedBox(
                           height: 12.0,
                         ),
-                        const Wrap(
+                        Wrap(
                           spacing: 8,
                           children: [
-                            DeleteProduct(),
-                            OptionCheap('آبی فیروزه ای', color: '4287f5'),
+                            DeleteProduct(index),
+                            const OptionCheap('آبی فیروزه ای', color: '4287f5'),
                           ],
                         ),
                       ],
@@ -294,7 +299,7 @@ class CardItem extends StatelessWidget {
                   width: 5.0,
                 ),
                 Text(
-                  '${basketItem.realPrice}',
+                  basketItem.price!.convertToPrice(),
                   style: const TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
@@ -310,38 +315,45 @@ class CardItem extends StatelessWidget {
 }
 
 class DeleteProduct extends StatelessWidget {
-  const DeleteProduct({
+  final int index;
+  const DeleteProduct(
+    this.index, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: CustomColors.red,
-          width: 1,
+    return InkWell(
+      onTap: () {
+        context.read<CardBloc>().add(CardRemoveProductEvent(index));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: CustomColors.red,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'حذف',
-              style: TextStyle(
-                fontFamily: 'sm',
-                fontSize: 12.0,
-                color: CustomColors.red,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'حذف',
+                style: TextStyle(
+                  fontFamily: 'sm',
+                  fontSize: 12.0,
+                  color: CustomColors.red,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 5.0,
-            ),
-            Image.asset('assets/images/icon_trash.png'),
-          ],
+              const SizedBox(
+                width: 5.0,
+              ),
+              Image.asset('assets/images/icon_trash.png'),
+            ],
+          ),
         ),
       ),
     );

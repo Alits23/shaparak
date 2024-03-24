@@ -413,6 +413,7 @@ class CommentBottomSheet extends StatefulWidget {
 }
 
 class _CommentBottomSheetState extends State<CommentBottomSheet> {
+  bool isKeyboardVisible = false;
   TextEditingController textController = TextEditingController();
 
   @override
@@ -538,9 +539,23 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
+                      onTap: () {
+                        setState(() {
+                          isKeyboardVisible = true;
+                        });
+                      },
+                      onSubmitted: (value) {
+                        setState(() {
+                          isKeyboardVisible = false;
+                        });
+                      },
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.only(
+                        bottom: isKeyboardVisible
+                            ? MediaQuery.of(context).viewInsets.bottom + 16.0
+                            : 8.0,
+                      ),
                       child: InkWell(
                         onTap: () {
                           if (textController.text.isEmpty) {
@@ -552,41 +567,44 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                               );
                           textController.text = '';
                         },
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: CustomColors.blue,
-                                borderRadius: BorderRadius.circular(15.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: CustomColors.blue,
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
                               ),
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(
-                                    sigmaX: 10.0, sigmaY: 10.0),
-                                child: Container(
-                                  height: 53,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'ثبت نظر',
-                                      style: TextStyle(
-                                        color: CustomColors.white,
-                                        fontFamily: 'sb',
-                                        fontSize: 16.0,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: BackdropFilter(
+                                  filter: ImageFilter.blur(
+                                      sigmaX: 10.0, sigmaY: 10.0),
+                                  child: Container(
+                                    height: 53,
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'ثبت نظر',
+                                        style: TextStyle(
+                                          color: CustomColors.white,
+                                          fontFamily: 'sb',
+                                          fontSize: 16.0,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
