@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/data/repository/basket_repository.dart';
-import 'package:shaparak/data/repository/comment_repository.dart';
 import 'package:shaparak/data/repository/producr_detail_repository.dart';
 import 'package:shaparak/di/di.dart';
 
