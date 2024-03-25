@@ -15,6 +15,7 @@ import 'package:shaparak/data/repository/category_repository.dart';
 import 'package:shaparak/data/repository/comment_repository.dart';
 import 'package:shaparak/data/repository/producr_detail_repository.dart';
 import 'package:shaparak/data/repository/product_repository.dart';
+import 'package:shaparak/util/dio_provider.dart';
 import 'package:shaparak/util/payment_handler.dart';
 import 'package:shaparak/util/url_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,9 +40,7 @@ Future<void> _initComponent() async {
   locator
       .registerSingleton<PaymentHandler>(ZarinPalPaymentHandler(locator.get()));
   locator.registerSingleton<Dio>(
-    Dio(
-      BaseOptions(baseUrl: 'https://startflutter.ir/api/'),
-    ),
+    DioProvider().creatDio(),
   );
   locator.registerSingleton<SharedPreferences>(
       await SharedPreferences.getInstance());
