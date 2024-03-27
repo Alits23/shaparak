@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
 import 'package:shaparak/util/auth_manager.dart';
 import 'package:shaparak/util/dio_provider.dart';

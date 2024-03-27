@@ -4,8 +4,6 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/auth/auth_event.dart';
 import 'package:shaparak/bloc/auth/auth_state.dart';
 import 'package:shaparak/constans/color.dart';
-import 'package:shaparak/main.dart';
-import 'package:shaparak/widgets/bottom_navigation.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});

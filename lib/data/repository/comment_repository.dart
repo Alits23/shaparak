@@ -25,6 +25,7 @@ class CommentRepository extends ICommentRepository {
   Future<Either<String, String>> postComment(
       String comment, String productid) async {
     try {
+      // ignore: unused_local_variable
       var response = await _datasource.postComment(comment, productid);
       return right('نظر شما ثبت شد');
     } on ApiException catch (ex) {

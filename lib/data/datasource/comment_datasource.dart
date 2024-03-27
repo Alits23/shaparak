@@ -37,6 +37,7 @@ class CommentDatasourceRemote extends ICommentDatasource {
   @override
   Future<void> postComment(String comment, String productid) async {
     try {
+      // ignore: unused_local_variable
       var response = await _dio.post(
         'collections/comment/records',
         data: {
