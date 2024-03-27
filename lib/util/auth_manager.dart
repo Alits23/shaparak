@@ -24,4 +24,12 @@ class AuthManager {
     String token = readAuth();
     return token.isNotEmpty;
   }
+
+  static void saveUserId(String id) async {
+    _sharedPref.setString('user_id', id);
+  }
+
+  static String getUserId() {
+    return _sharedPref.getString('user_id') ?? '';
+  }
 }

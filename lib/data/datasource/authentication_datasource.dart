@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
+import 'package:shaparak/util/auth_manager.dart';
 import 'package:shaparak/util/dio_provider.dart';
 
 abstract class IAuthDatasource {
@@ -53,6 +54,7 @@ class AuthDatasourceRemote extends IAuthDatasource {
       var response = await _dio.post('collections/users/auth-with-password',
           data: {'identity': identity, 'password': password});
       if (response.statusCode == 200) {
+        AuthManager.saveUserId(response.data!['record']['id']);
         return response.data['token'];
       }
     } on DioException catch (ex) {

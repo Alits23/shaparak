@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:shaparak/data/model/comment.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
+import 'package:shaparak/util/auth_manager.dart';
 
 abstract class ICommentDatasource {
   Future<List<Comment>> getComment(String productid);
@@ -10,7 +11,7 @@ abstract class ICommentDatasource {
 
 class CommentDatasourceRemote extends ICommentDatasource {
   final Dio _dio = locator.get();
-
+  final String userId = AuthManager.getUserId();
   @override
   Future<List<Comment>> getComment(String productid) async {
     Map<String, String> qParams = {
@@ -40,7 +41,7 @@ class CommentDatasourceRemote extends ICommentDatasource {
         'collections/comment/records',
         data: {
           'text': comment,
-          'user_id': 'qcft6hutapro7p6',
+          'user_id': userId,
           'product_id': productid,
         },
       );
