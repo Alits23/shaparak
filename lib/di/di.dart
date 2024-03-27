@@ -36,14 +36,14 @@ Future<void> getInit() async {
 }
 
 Future<void> _initComponent() async {
+  locator.registerSingleton<SharedPreferences>(
+      await SharedPreferences.getInstance());
   locator.registerSingleton<UrlHandler>(UrlLauncher());
   locator
       .registerSingleton<PaymentHandler>(ZarinPalPaymentHandler(locator.get()));
   locator.registerSingleton<Dio>(
-    DioProvider().creatDio(),
+    DioProvider.creatDio(),
   );
-  locator.registerSingleton<SharedPreferences>(
-      await SharedPreferences.getInstance());
 }
 
 void _initDatasource() {

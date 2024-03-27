@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
+import 'package:shaparak/util/dio_provider.dart';
 
 abstract class IAuthDatasource {
   Future<void> register(
@@ -15,9 +16,10 @@ abstract class IAuthDatasource {
   ); //Login
 }
 
-//register
 class AuthDatasourceRemote extends IAuthDatasource {
-  final Dio _dio = locator.get();
+  final Dio _dio = DioProvider.creatDioWithoutHeader();
+
+  //register
   @override
   Future<void> register(
     String username,

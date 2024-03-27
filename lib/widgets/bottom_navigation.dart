@@ -12,6 +12,7 @@ import 'package:shaparak/view/card_screen.dart';
 import 'package:shaparak/view/category_screen.dart';
 import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/login_screen.dart';
+import 'package:shaparak/view/profile_screen.dart';
 
 import '../bloc/card/card_event.dart';
 import '../di/di.dart';
@@ -34,7 +35,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           // login screen
           BlocProvider(
             create: (context) => AuthBloc(),
-            child: LoginScreen(),
+            child: ProfileScreen(),
           ),
           // category screen
           BlocProvider(

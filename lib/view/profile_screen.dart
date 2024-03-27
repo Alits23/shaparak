@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shaparak/bloc/auth/auth_bloc.dart';
+import 'package:shaparak/bloc/auth/auth_state.dart';
+import 'package:shaparak/main.dart';
+import 'package:shaparak/util/auth_manager.dart';
+import 'package:shaparak/view/login_screen.dart';
+import 'package:shaparak/widgets/bottom_navigation.dart';
 import '../constans/color.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -6,14 +13,38 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
       body: SafeArea(
         child: Column(
           children: [
-            AppBarProfile(),
-            InfoUser(),
-            Wrap(
+            const AppBarProfile(),
+            const InfoUser(),
+            ElevatedButton(
+                onPressed: () {
+                  AuthManager.logout();
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) {
+                        var authBloc = AuthBloc();
+                        authBloc.stream.forEach((state) {
+                          if (state is AuthResponseState) {
+                            state.response.fold((l) {}, (r) {
+                              globalNavigatorKey.currentState
+                                  ?.pushReplacement(MaterialPageRoute(
+                                builder: (context) => const BottomNavigation(),
+                              ));
+                            });
+                          }
+                        });
+                        return authBloc;
+                      },
+                      child: LoginScreen(),
+                    ),
+                  ));
+                },
+                child: const Text('خروج ')),
+            const Wrap(
               spacing: 20.0,
               runSpacing: 20.0,
               alignment: WrapAlignment.end,
