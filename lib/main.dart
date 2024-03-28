@@ -29,11 +29,8 @@ class MyApp extends StatelessWidget {
       navigatorKey: globalNavigatorKey,
       debugShowCheckedModeBanner: false,
       home: (AuthManager.readAuth().isEmpty)
-          ? BlocProvider(
-              create: (context) => AuthBloc(),
-              child: LoginScreen(),
-            )
-          : BottomNavigation(),
+          ? LoginScreen()
+          : const BottomNavigation(),
     );
   }
 }

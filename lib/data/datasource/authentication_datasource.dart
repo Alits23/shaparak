@@ -36,6 +36,10 @@ class AuthDatasourceRemote extends IAuthDatasource {
           'passwordConfirm': passwordConfirm,
         },
       );
+      if (response.statusCode == 200) {
+        AuthManager.saveUserId(response.data?['id']);
+        return response.data['token'];
+      }
     } on DioException catch (ex) {
       throw ApiException(
         ex.response?.statusCode,
@@ -53,7 +57,7 @@ class AuthDatasourceRemote extends IAuthDatasource {
       var response = await _dio.post('collections/users/auth-with-password',
           data: {'identity': identity, 'password': password});
       if (response.statusCode == 200) {
-        AuthManager.saveUserId(response.data!['record']['id']);
+        AuthManager.saveUserId(response.data?['record']['id']);
         return response.data['token'];
       }
     } on DioException catch (ex) {

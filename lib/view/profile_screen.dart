@@ -23,25 +23,10 @@ class ProfileScreen extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   AuthManager.logout();
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) {
-                        var authBloc = AuthBloc();
-                        authBloc.stream.forEach((state) {
-                          if (state is AuthResponseState) {
-                            state.response.fold((l) {}, (r) {
-                              globalNavigatorKey.currentState
-                                  ?.pushReplacement(MaterialPageRoute(
-                                builder: (context) => const BottomNavigation(),
-                              ));
-                            });
-                          }
-                        });
-                        return authBloc;
-                      },
-                      child: LoginScreen(),
-                    ),
-                  ));
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  }));
                 },
                 child: const Text('خروج ')),
             const Wrap(

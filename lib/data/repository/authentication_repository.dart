@@ -19,17 +19,24 @@ abstract class IAuthRepository {
 
 class AuthRepository extends IAuthRepository {
   final IAuthDatasource _datasource = locator.get();
+
+  //register
   @override
   Future<Either<String, String>> register(
       String username, String password, String passwordConfirm) async {
     try {
-      await _datasource.register(username, password, passwordConfirm);
+      await _datasource.register(
+        username,
+        password,
+        passwordConfirm,
+      );
       return right('ثبت نام انجام شد');
     } on ApiException catch (ex) {
       return left(ex.message ?? ' خطای ناشناخته ');
     }
   }
 
+  //login
   @override
   Future<Either<String, String>> login(String identity, String password) async {
     try {
