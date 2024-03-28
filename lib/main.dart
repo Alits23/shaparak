@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/data/model/basket_item.dart';
 import 'package:shaparak/util/auth_manager.dart';
 import 'package:shaparak/view/login_screen.dart';

@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shaparak/bloc/auth/auth_bloc.dart';
-import 'package:shaparak/bloc/auth/auth_state.dart';
-import 'package:shaparak/main.dart';
 import 'package:shaparak/util/auth_manager.dart';
 import 'package:shaparak/view/login_screen.dart';
-import 'package:shaparak/widgets/bottom_navigation.dart';
 import '../constans/color.dart';
 
 class ProfileScreen extends StatelessWidget {

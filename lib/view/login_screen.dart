@@ -50,10 +50,11 @@ class ViewContainer extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                Container(
-                    width: 200,
-                    height: 200,
-                    child: Image.asset('assets/images/login_photo.jpg')),
+                SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: Image.asset('assets/images/login_photo.jpg'),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -126,7 +127,7 @@ class ViewContainer extends StatelessWidget {
                     if (state is AuthResponseState) {
                       state.response.fold((l) {}, (r) {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => BottomNavigation(),
+                          builder: (context) => const BottomNavigation(),
                         ));
                       });
                     }
