@@ -246,13 +246,7 @@ class CardItem extends StatelessWidget {
                         const SizedBox(
                           height: 12.0,
                         ),
-                        Wrap(
-                          spacing: 8,
-                          children: [
-                            DeleteProduct(index),
-                            const OptionCheap('آبی فیروزه ای', color: '4287f5'),
-                          ],
-                        ),
+                        DeleteProduct(index),
                       ],
                     ),
                   ),
@@ -360,45 +354,45 @@ class DeleteProduct extends StatelessWidget {
   }
 }
 
-class OptionCheap extends StatelessWidget {
-  final String title;
-  final String? color;
-  const OptionCheap(this.title, {super.key, this.color});
+// class OptionCheap extends StatelessWidget {
+//   final String title;
+//   final String? color;
+//   const OptionCheap(this.title, {super.key, this.color});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: CustomColors.gery,
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              textDirection: TextDirection.rtl,
-              style: const TextStyle(fontFamily: 'sm', fontSize: 12.0),
-            ),
-            if (color != null) ...{
-              Container(
-                width: 12.0,
-                height: 12.0,
-                margin: const EdgeInsets.only(left: 8.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color.parseToColor(),
-                ),
-              ),
-            },
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         border: Border.all(
+//           color: CustomColors.gery,
+//           width: 1,
+//         ),
+//         borderRadius: BorderRadius.circular(10.0),
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+//         child: Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Text(
+//               title,
+//               textDirection: TextDirection.rtl,
+//               style: const TextStyle(fontFamily: 'sm', fontSize: 12.0),
+//             ),
+//             if (color != null) ...{
+//               Container(
+//                 width: 12.0,
+//                 height: 12.0,
+//                 margin: const EdgeInsets.only(left: 8.0),
+//                 decoration: BoxDecoration(
+//                   shape: BoxShape.circle,
+//                   color: color.parseToColor(),
+//                 ),
+//               ),
+//             },
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
