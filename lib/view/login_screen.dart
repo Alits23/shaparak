@@ -48,7 +48,7 @@ class ViewContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(
-                  height: 60,
+                  height: 15,
                 ),
                 const SizedBox(
                   width: 200,
@@ -57,9 +57,6 @@ class ViewContainer extends StatelessWidget {
                     imageUrl:
                         'https://img.freepik.com/free-vector/contact-icon-3d-vector-illustration-blue-button-with-user-profile-symbol-networking-sites-apps-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1715.jpg?size=338&ext=jpg&ga=GA1.1.2116175301.1700611200&semt=ais',
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
@@ -128,7 +125,24 @@ class ViewContainer extends StatelessWidget {
                 BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state is AuthResponseState) {
-                      state.response.fold((l) {}, (r) {
+                      state.response.fold((error) {
+                        usernameController.text = '';
+                        passwordController.text = '';
+                        var snackBar = SnackBar(
+                          content: Text(
+                            error,
+                            textDirection: TextDirection.rtl,
+                            style: const TextStyle(
+                              fontFamily: 'dana',
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          backgroundColor: CustomColors.blue,
+                          behavior: SnackBarBehavior.floating,
+                          duration: const Duration(seconds: 2),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }, (r) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const BottomNavigation(),
                         ));
@@ -172,16 +186,42 @@ class ViewContainer extends StatelessWidget {
                       );
                     }
                     if (state is AuthResponseState) {
-                      Text text = const Text('');
+                      Widget widget = const Text('');
                       state.response.fold(
-                        (l) {
-                          text = Text(l);
+                        (error) {
+                          widget = ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              textStyle: const TextStyle(
+                                fontFamily: 'dana',
+                                fontSize: 20.0,
+                              ),
+                              backgroundColor: CustomColors.blueIndicator,
+                              minimumSize: const Size(200.0, 48.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            onPressed: () {
+                              BlocProvider.of<AuthBloc>(context).add(
+                                AuthLoginRequestEvent(
+                                  usernameController.text,
+                                  passwordController.text,
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'ورود',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
                         },
-                        (r) {
-                          text = Text(r);
+                        (response) {
+                          widget = Text(response);
                         },
                       );
-                      return text;
+                      return widget;
                     }
                     return const Text('! خطای نا مشخص');
                   },
@@ -191,7 +231,7 @@ class ViewContainer extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) {
                           return RegisterScreen();
@@ -200,7 +240,7 @@ class ViewContainer extends StatelessWidget {
                     );
                   },
                   child: const Text(
-                    'ثبت نام',
+                    'اگر حساب کاربری ندارید ثبت نام کنید',
                     style: TextStyle(
                       fontFamily: 'dana',
                       fontSize: 16.0,

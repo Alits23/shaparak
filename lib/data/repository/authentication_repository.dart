@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:shaparak/data/datasource/authentication_datasource.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/api_exception.dart';
-import 'package:shaparak/util/auth_manager.dart';
 
 abstract class IAuthRepository {
   Future<Either<String, String>> register(
@@ -32,7 +31,7 @@ class AuthRepository extends IAuthRepository {
       );
       return right('ثبت نام انجام شد');
     } on ApiException catch (ex) {
-      return left(ex.message ?? ' خطای ناشناخته ');
+      return left('${ex.message}');
     }
   }
 
@@ -42,13 +41,12 @@ class AuthRepository extends IAuthRepository {
     try {
       String token = await _datasource.login(identity, password);
       if (token.isNotEmpty) {
-        AuthManager.saveToken(token);
         return right('شما وارد شدید');
       } else {
         return left('خطایی در ورود رخ داده است');
       }
-    } on ApiException {
-      return left('نام کاربری یا رمز عبور اشتباه است');
+    } on ApiException catch (ex) {
+      return left('${ex.message}');
     }
   }
 }

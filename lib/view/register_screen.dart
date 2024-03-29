@@ -4,6 +4,7 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/auth/auth_event.dart';
 import 'package:shaparak/bloc/auth/auth_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/view/login_screen.dart';
 import 'package:shaparak/widgets/bottom_navigation.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
@@ -51,15 +52,16 @@ class ViewContainer extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 60,
+                  height: 15,
                 ),
                 const SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: CashedImage(
-                      imageUrl:
-                          'https://img.freepik.com/premium-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security_566886-2817.jpg',
-                    )),
+                  width: 200,
+                  height: 200,
+                  child: CashedImage(
+                    imageUrl:
+                        'https://img.freepik.com/premium-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security_566886-2817.jpg',
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -165,7 +167,23 @@ class ViewContainer extends StatelessWidget {
                     BlocConsumer<AuthBloc, AuthState>(
                       listener: (context, state) {
                         if (state is AuthResponseState) {
-                          state.response.fold((l) {}, (r) {
+                          state.response.fold((error) {
+                            var snackBar = SnackBar(
+                              content: Text(
+                                error,
+                                textDirection: TextDirection.rtl,
+                                style: const TextStyle(
+                                  fontFamily: 'dana',
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                              backgroundColor: CustomColors.blue,
+                              behavior: SnackBarBehavior.floating,
+                              duration: const Duration(seconds: 2),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }, (r) {
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
                               builder: (context) => const BottomNavigation(),
@@ -209,21 +227,68 @@ class ViewContainer extends StatelessWidget {
                           );
                         }
                         if (state is AuthResponseState) {
-                          Text text = const Text('');
+                          Widget widget = Text('');
                           state.response.fold(
-                            (l) {
-                              text = Text(l);
+                            (error) {
+                              widget = ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  textStyle: const TextStyle(
+                                    fontFamily: 'dana',
+                                    fontSize: 20.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  backgroundColor: CustomColors.blueIndicator,
+                                  minimumSize: const Size(200.0, 48.0),
+                                ),
+                                onPressed: () {
+                                  BlocProvider.of<AuthBloc>(context).add(
+                                    AuthRegisterRequestEvent(
+                                        usernameController.text,
+                                        passwordController.text,
+                                        passwordConfirmController.text),
+                                  );
+                                },
+                                child: const Text(
+                                  'ثبت نام',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
                             },
                             (r) {
-                              text = Text(r);
+                              widget = Text(r);
                             },
                           );
-                          return text;
+                          return widget;
                         }
                         return const Text('! خطای نا مشخص');
                       },
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return LoginScreen();
+                        },
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'اگر حساب کاربری دارید وارد شوید',
+                    style: TextStyle(
+                      fontFamily: 'dana',
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ),
               ],
             ),

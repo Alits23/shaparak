@@ -27,23 +27,23 @@ class AuthDatasourceRemote extends IAuthDatasource {
     String passwordConfirm,
   ) async {
     try {
-      // ignore: unused_local_variable
-      var response = await _dio.post(
+      final response = await _dio.post(
         'collections/users/records',
         data: {
           'username': username,
           'password': password,
           'passwordConfirm': passwordConfirm,
+          'name': username,
         },
       );
       if (response.statusCode == 200) {
-        AuthManager.saveUserId(response.data?['id']);
-        return response.data['token'];
+        login(username, password);
       }
     } on DioException catch (ex) {
       throw ApiException(
         ex.response?.statusCode,
-        ex.response?.data['data']['username']['message'],
+        ex.response?.data['message'],
+        response: ex.response,
       );
     } catch (ex) {
       throw ApiException(0, 'unknow error');
@@ -58,12 +58,14 @@ class AuthDatasourceRemote extends IAuthDatasource {
           data: {'identity': identity, 'password': password});
       if (response.statusCode == 200) {
         AuthManager.saveUserId(response.data?['record']['id']);
+        AuthManager.saveToken(response.data['token']);
         return response.data['token'];
       }
     } on DioException catch (ex) {
       throw ApiException(
         ex.response?.statusCode,
         ex.response?.data['message'],
+        response: ex.response,
       );
     } catch (ex) {
       throw ApiException(0, 'unknow error');
