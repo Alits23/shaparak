@@ -4,6 +4,8 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/auth/auth_event.dart';
 import 'package:shaparak/bloc/auth/auth_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/widgets/bottom_navigation.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
@@ -13,6 +15,31 @@ class RegisterScreen extends StatelessWidget {
       TextEditingController(text: '123456789');
   final TextEditingController passwordConfirmController =
       TextEditingController(text: '123456789');
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthBloc(),
+      child: ViewContainer(
+        usernameController: usernameController,
+        passwordController: passwordController,
+        passwordConfirmController: passwordConfirmController,
+      ),
+    );
+  }
+}
+
+class ViewContainer extends StatelessWidget {
+  const ViewContainer({
+    super.key,
+    required this.usernameController,
+    required this.passwordController,
+    required this.passwordConfirmController,
+  });
+
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +53,13 @@ class RegisterScreen extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                Container(
-                  width: 200,
-                  height: 200,
-                  child: Image.asset(
-                    'assets/images/register.jpg',
-                  ),
-                ),
+                const SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: CashedImage(
+                      imageUrl:
+                          'https://img.freepik.com/premium-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security_566886-2817.jpg',
+                    )),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -135,7 +162,17 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
 
-                    BlocBuilder<AuthBloc, AuthState>(
+                    BlocConsumer<AuthBloc, AuthState>(
+                      listener: (context, state) {
+                        if (state is AuthResponseState) {
+                          state.response.fold((l) {}, (r) {
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) => const BottomNavigation(),
+                            ));
+                          });
+                        }
+                      },
                       builder: (context, state) {
                         if (state is AuthInitState) {
                           return ElevatedButton(

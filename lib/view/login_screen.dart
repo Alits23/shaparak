@@ -4,9 +4,9 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/auth/auth_event.dart';
 import 'package:shaparak/bloc/auth/auth_state.dart';
 import 'package:shaparak/constans/color.dart';
-import 'package:shaparak/main.dart';
 import 'package:shaparak/view/register_screen.dart';
 import 'package:shaparak/widgets/bottom_navigation.dart';
+import 'package:shaparak/widgets/cashed_image.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -50,10 +50,13 @@ class ViewContainer extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 200,
                   height: 200,
-                  child: Image.asset('assets/images/login_photo.jpg'),
+                  child: CashedImage(
+                    imageUrl:
+                        'https://img.freepik.com/free-vector/contact-icon-3d-vector-illustration-blue-button-with-user-profile-symbol-networking-sites-apps-cartoon-style-isolated-white-background-online-communication-digital-marketing-concept_778687-1715.jpg?size=338&ext=jpg&ga=GA1.1.2116175301.1700611200&semt=ais',
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -126,7 +129,7 @@ class ViewContainer extends StatelessWidget {
                   listener: (context, state) {
                     if (state is AuthResponseState) {
                       state.response.fold((l) {}, (r) {
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => const BottomNavigation(),
                         ));
                       });
@@ -191,24 +194,7 @@ class ViewContainer extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return BlocProvider(
-                            create: (context) {
-                              var authBloc = AuthBloc();
-                              authBloc.stream.forEach((state) {
-                                if (state is AuthResponseState) {
-                                  state.response.fold((l) {}, (r) {
-                                    globalNavigatorKey.currentState
-                                        ?.pushReplacement(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const BottomNavigation(),
-                                    ));
-                                  });
-                                }
-                              });
-                              return authBloc;
-                            },
-                            child: RegisterScreen(),
-                          );
+                          return RegisterScreen();
                         },
                       ),
                     );

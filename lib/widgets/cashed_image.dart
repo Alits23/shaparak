@@ -12,13 +12,12 @@ class CashedImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius),
       child: CachedNetworkImage(
         fit: BoxFit.cover,
-        imageUrl: imageUrl ??
-            'http://startflutter.ir/api/files/f5pm8kntkfuwbn1/78q8w901e6iipuk/rectangle_63_7kADbEzuEo.png',
+        imageUrl: imageUrl!,
         errorWidget: (context, url, error) => Container(
           color: CustomColors.red,
         ),
         placeholder: (context, url) => Container(
-          color: CustomColors.gery,
+          color: CustomColors.white,
         ),
       ),
     );
