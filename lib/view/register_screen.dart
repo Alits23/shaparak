@@ -29,7 +29,7 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-class ViewContainer extends StatelessWidget {
+class ViewContainer extends StatefulWidget {
   const ViewContainer({
     super.key,
     required this.usernameController,
@@ -41,6 +41,12 @@ class ViewContainer extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmController;
 
+  @override
+  State<ViewContainer> createState() => _ViewContainerState();
+}
+
+class _ViewContainerState extends State<ViewContainer> {
+  bool passwordVisibility = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +86,7 @@ class ViewContainer extends StatelessWidget {
                       Container(
                         color: Colors.grey[300],
                         child: TextField(
-                          controller: usernameController,
+                          controller: widget.usernameController,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                           ),
@@ -115,12 +121,24 @@ class ViewContainer extends StatelessWidget {
                           Container(
                             color: Colors.grey[300],
                             child: TextField(
-                              controller: passwordController,
-                              obscureText: true,
+                              controller: widget.passwordController,
+                              obscureText: passwordVisibility,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      passwordVisibility = !passwordVisibility;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    (!passwordVisibility)
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -151,12 +169,24 @@ class ViewContainer extends StatelessWidget {
                           Container(
                             color: Colors.grey[300],
                             child: TextField(
-                              controller: passwordConfirmController,
-                              obscureText: true,
+                              controller: widget.passwordConfirmController,
+                              obscureText: passwordVisibility,
                               enableSuggestions: false,
                               autocorrect: false,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      passwordVisibility = !passwordVisibility;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    (!passwordVisibility)
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -192,6 +222,10 @@ class ViewContainer extends StatelessWidget {
                         }
                       },
                       builder: (context, state) {
+                        final usernameController = widget.usernameController;
+                        final passwordController = widget.passwordController;
+                        final passwordConfirmController =
+                            widget.passwordConfirmController;
                         if (state is AuthInitState) {
                           return ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -208,9 +242,9 @@ class ViewContainer extends StatelessWidget {
                             onPressed: () {
                               BlocProvider.of<AuthBloc>(context).add(
                                 AuthRegisterRequestEvent(
-                                    usernameController.text,
-                                    passwordController.text,
-                                    passwordConfirmController.text),
+                                    widget.usernameController.text,
+                                    widget.passwordController.text,
+                                    widget.passwordConfirmController.text),
                               );
                             },
                             child: const Text(
@@ -227,7 +261,7 @@ class ViewContainer extends StatelessWidget {
                           );
                         }
                         if (state is AuthResponseState) {
-                          Widget widget = Text('');
+                          Widget widget = const Text('');
                           state.response.fold(
                             (error) {
                               widget = ElevatedButton(
@@ -245,9 +279,10 @@ class ViewContainer extends StatelessWidget {
                                 onPressed: () {
                                   BlocProvider.of<AuthBloc>(context).add(
                                     AuthRegisterRequestEvent(
-                                        usernameController.text,
-                                        passwordController.text,
-                                        passwordConfirmController.text),
+                                      usernameController.text,
+                                      passwordController.text,
+                                      passwordConfirmController.text,
+                                    ),
                                   );
                                 },
                                 child: const Text(

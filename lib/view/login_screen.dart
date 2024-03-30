@@ -10,22 +10,26 @@ import 'package:shaparak/widgets/cashed_image.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
+
   final TextEditingController usernameController =
       TextEditingController(text: 'alits23');
+
   final TextEditingController passwordController =
       TextEditingController(text: '123456789');
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: ViewContainer(
-          usernameController: usernameController,
-          passwordController: passwordController),
+        usernameController: usernameController,
+        passwordController: passwordController,
+      ),
     );
   }
 }
 
-class ViewContainer extends StatelessWidget {
+class ViewContainer extends StatefulWidget {
   const ViewContainer({
     super.key,
     required this.usernameController,
@@ -34,6 +38,13 @@ class ViewContainer extends StatelessWidget {
 
   final TextEditingController usernameController;
   final TextEditingController passwordController;
+
+  @override
+  State<ViewContainer> createState() => _ViewContainerState();
+}
+
+class _ViewContainerState extends State<ViewContainer> {
+  bool passwordVisibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +87,7 @@ class ViewContainer extends StatelessWidget {
                       Container(
                         color: Colors.grey[300],
                         child: TextField(
-                          controller: usernameController,
+                          controller: widget.usernameController,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                           ),
@@ -107,12 +118,24 @@ class ViewContainer extends StatelessWidget {
                       Container(
                         color: Colors.grey[300],
                         child: TextField(
-                          controller: passwordController,
-                          obscureText: true,
+                          controller: widget.passwordController,
+                          obscureText: passwordVisibility,
                           enableSuggestions: false,
                           autocorrect: false,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisibility = !passwordVisibility;
+                                });
+                              },
+                              icon: Icon(
+                                (!passwordVisibility)
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -126,8 +149,8 @@ class ViewContainer extends StatelessWidget {
                   listener: (context, state) {
                     if (state is AuthResponseState) {
                       state.response.fold((error) {
-                        usernameController.text = '';
-                        passwordController.text = '';
+                        widget.usernameController.text = '';
+                        widget.passwordController.text = '';
                         var snackBar = SnackBar(
                           content: Text(
                             error,
@@ -150,6 +173,8 @@ class ViewContainer extends StatelessWidget {
                     }
                   },
                   builder: (context, state) {
+                    final usernameController = widget.usernameController;
+                    final passwordController = widget.passwordController;
                     if (state is AuthInitState) {
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -166,8 +191,8 @@ class ViewContainer extends StatelessWidget {
                         onPressed: () {
                           BlocProvider.of<AuthBloc>(context).add(
                             AuthLoginRequestEvent(
-                              usernameController.text,
-                              passwordController.text,
+                              widget.usernameController.text,
+                              widget.passwordController.text,
                             ),
                           );
                         },
