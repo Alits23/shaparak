@@ -283,7 +283,7 @@ class CardItem extends StatelessWidget {
                   width: 5.0,
                 ),
                 Text(
-                  basketItem.price!.convertToPrice(),
+                  basketItem.realPrice!.convertToPrice(),
                   style: const TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
