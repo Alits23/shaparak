@@ -5,7 +5,6 @@ import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/card/card_state.dart';
 import 'package:shaparak/util/extenstions/int_extensions.dart';
-import 'package:shaparak/util/extenstions/string_extensions.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
 import '../data/model/basket_item.dart';
@@ -343,46 +342,3 @@ class DeleteProduct extends StatelessWidget {
     );
   }
 }
-
-// class OptionCheap extends StatelessWidget {
-//   final String title;
-//   final String? color;
-//   const OptionCheap(this.title, {super.key, this.color});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         border: Border.all(
-//           color: CustomColors.gery,
-//           width: 1,
-//         ),
-//         borderRadius: BorderRadius.circular(10.0),
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
-//         child: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Text(
-//               title,
-//               textDirection: TextDirection.rtl,
-//               style: const TextStyle(fontFamily: 'sm', fontSize: 12.0),
-//             ),
-//             if (color != null) ...{
-//               Container(
-//                 width: 12.0,
-//                 height: 12.0,
-//                 margin: const EdgeInsets.only(left: 8.0),
-//                 decoration: BoxDecoration(
-//                   shape: BoxShape.circle,
-//                   color: color.parseToColor(),
-//                 ),
-//               ),
-//             },
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
