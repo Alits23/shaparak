@@ -15,37 +15,30 @@ class ProfileScreen extends StatelessWidget {
           children: [
             const AppBarProfile(),
             const InfoUser(),
+            const Spacer(),
             ElevatedButton(
-                onPressed: () {
-                  AuthManager.logout();
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return LoginScreen();
-                  }));
-                },
-                child: const Text('خروج ')),
-            const Wrap(
-              spacing: 20.0,
-              runSpacing: 20.0,
-              alignment: WrapAlignment.end,
-              children: [
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-                ItemList(),
-              ],
+              style: ElevatedButton.styleFrom(
+                backgroundColor: CustomColors.red,
+              ),
+              onPressed: () {
+                AuthManager.logout();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginScreen();
+                    },
+                  ),
+                );
+              },
+              child: const Text(
+                'خروج از حساب کاربری',
+                style: TextStyle(
+                  color: CustomColors.white,
+                  fontFamily: 'dana',
+                ),
+              ),
             ),
-            Spacer(),
-            Text(
+            const Text(
               'Shaparak Shop',
               style: TextStyle(
                 fontFamily: 'sm',
@@ -53,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                 color: CustomColors.gery,
               ),
             ),
-            Text(
+            const Text(
               'v -2.2.04',
               style: TextStyle(
                 fontFamily: 'sm',
@@ -61,58 +54,12 @@ class ProfileScreen extends StatelessWidget {
                 color: CustomColors.gery,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class ItemList extends StatelessWidget {
-  const ItemList({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 56.0,
-          height: 56.0,
-          decoration: BoxDecoration(
-            color: CustomColors.blueIndicator,
-            borderRadius: BorderRadius.circular(15.0),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 25.0,
-                color: CustomColors.blueIndicator,
-                spreadRadius: -12.0,
-                offset: Offset(0.0, 15.0),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.settings,
-            color: CustomColors.white,
-            size: 35.0,
-          ),
-        ),
-        const SizedBox(
-          height: 10.0,
-        ),
-        const Text(
-          'تنظیمات',
-          style: TextStyle(
-            fontFamily: 'sb',
-            fontSize: 14,
-            color: Colors.black,
-          ),
-        ),
-      ],
     );
   }
 }
