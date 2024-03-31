@@ -71,28 +71,28 @@ class InfoUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Text(
-          'علی تشکری صباغ',
-          style: TextStyle(
+          AuthManager.getUsername(),
+          style: const TextStyle(
             fontFamily: 'sb',
             fontSize: 20,
             color: Colors.black,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Text(
-          '# 99154028',
-          style: TextStyle(
+          AuthManager.getUserId(),
+          style: const TextStyle(
             fontFamily: 'sm',
             fontSize: 14,
             color: CustomColors.gery,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 30,
         ),
       ],

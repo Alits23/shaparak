@@ -59,6 +59,7 @@ class AuthDatasourceRemote extends IAuthDatasource {
       if (response.statusCode == 200) {
         AuthManager.saveUserId(response.data?['record']['id']);
         AuthManager.saveToken(response.data['token']);
+        AuthManager.saveUsername(response.data?['record']['username']);
         return response.data['token'];
       }
     } on DioException catch (ex) {

@@ -32,4 +32,12 @@ class AuthManager {
   static String getUserId() {
     return _sharedPref.getString('user_id') ?? '';
   }
+
+  static void saveUsername(String username) async {
+    _sharedPref.setString('username', username);
+  }
+
+  static String getUsername() {
+    return _sharedPref.getString('username') ?? '';
+  }
 }
