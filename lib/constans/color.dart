@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 class CustomColors {
@@ -19,3 +21,9 @@ class CustomColors {
   static const Color geryDark = Color(0xffB0B0B0);
   static const Color whiteDark = Color(0xff1E1E1E);
 }
+
+// snackbar
+const SNACKBAR_COLOR = Color(0xff242C32);
+const SNACKBAR_SUCCESS_COLOR = Color(0xff01E17B);
+const SNACKBAR_WARNING_COLOR = Color(0xffFFD21F);
+const SNACKBAR_ERROR_COLOR = Color(0xffF04349);

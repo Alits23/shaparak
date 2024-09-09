@@ -73,6 +73,14 @@ class InfoUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          width: 120,
+          height: 120,
+          child: Image.asset('assets/images/avatar.png'),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
         Text(
           AuthManager.getUsername(),
           style: const TextStyle(

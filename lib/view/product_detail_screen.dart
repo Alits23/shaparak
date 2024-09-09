@@ -19,6 +19,7 @@ import 'package:shaparak/data/model/properties.dart';
 import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/di/di.dart';
+import 'package:shaparak/util/snack_bar.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import 'package:shaparak/widgets/loading_animation.dart';
 
@@ -272,6 +273,7 @@ class AddToBasketButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        CustomSnackBar.successSnackBar(context, 'به سبد خرید اضافه شد');
         context.read<ProductBloc>().add(ProductAddToBasket(product));
         context.read<CardBloc>().add(CardRequestDataEvent());
       },
