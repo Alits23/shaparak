@@ -54,8 +54,13 @@ class AuthDatasourceRemote extends IAuthDatasource {
   @override
   Future<String> login(String identity, String password) async {
     try {
-      var response = await _dio.post('collections/users/auth-with-password',
-          data: {'identity': identity, 'password': password});
+      var response = await _dio.post(
+        'collections/users/auth-with-password',
+        data: {
+          'identity': identity,
+          'password': password,
+        },
+      );
       if (response.statusCode == 200) {
         AuthManager.saveUserId(response.data?['record']['id']);
         AuthManager.saveToken(response.data['token']);

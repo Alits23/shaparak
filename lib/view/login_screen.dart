@@ -149,8 +149,6 @@ class _ViewContainerState extends State<ViewContainer> {
                   listener: (context, state) {
                     if (state is AuthResponseState) {
                       state.response.fold((error) {
-                        widget.usernameController.text = '';
-                        widget.passwordController.text = '';
                         var snackBar = SnackBar(
                           content: Text(
                             error,

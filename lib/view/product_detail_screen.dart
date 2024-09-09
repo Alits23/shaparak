@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
@@ -13,6 +11,7 @@ import 'package:shaparak/bloc/product_detail/product_detail_bloc.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_event.dart';
 import 'package:shaparak/bloc/product_detail/product_detail_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/data/model/comment.dart';
 import 'package:shaparak/data/model/product.dart';
 import 'package:shaparak/data/model/product_image.dart';
 import 'package:shaparak/data/model/product_variant.dart';
@@ -329,6 +328,7 @@ class UsersComment extends StatefulWidget {
 }
 
 class _UsersCommentState extends State<UsersComment> {
+  ValueNotifier<int> page = ValueNotifier(1);
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
@@ -348,11 +348,12 @@ class _UsersCommentState extends State<UsersComment> {
                   create: (context) {
                     CommentBloc(locator.get());
                     final bloc = CommentBloc(locator.get());
-                    bloc.add(CommentRequestList(widget.product.id));
+                    bloc.add(CommentRequestList(widget.product.id, page.value));
                     return bloc;
                   },
                   child: CommentBottomSheet(
                     productId: widget.product.id,
+                    page: page.value,
                   ),
                 );
               },
@@ -402,10 +403,11 @@ class _UsersCommentState extends State<UsersComment> {
 
 class CommentBottomSheet extends StatefulWidget {
   final String productId;
-
+  final int page;
   const CommentBottomSheet({
     super.key,
     required this.productId,
+    required this.page,
   });
 
   @override
@@ -415,10 +417,50 @@ class CommentBottomSheet extends StatefulWidget {
 class _CommentBottomSheetState extends State<CommentBottomSheet> {
   bool isKeyboardVisible = false;
   TextEditingController textController = TextEditingController();
+  ScrollController commentScrollController = ScrollController();
+  bool commentRequest = true;
+  int pageList = 1;
+  List<Comment> commentListLocal = [];
+  @override
+  void initState() {
+    commentScrollController.addListener(() {
+      if (commentScrollController.position.pixels ==
+          commentScrollController.position.maxScrollExtent) {
+        if (commentRequest) {
+          ++pageList;
+          widget.page != pageList;
+          BlocProvider.of<CommentBloc>(context)
+              .add(CommentRequestList(widget.productId, pageList));
+        }
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CommentBloc, CommentState>(
+    return BlocConsumer<CommentBloc, CommentState>(
+      listener: (context, state) {
+        if (state is CommentResponseState) {
+          state.getComment.fold((l) => null, (commentList) {
+            if (commentList.isEmpty) {
+              commentRequest = false;
+            } else {
+              commentRequest = true;
+              commentListLocal.addAll(commentList);
+            }
+          });
+        }
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (commentScrollController.hasClients) {
+            commentScrollController.animateTo(
+              commentScrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.linear,
+            );
+          }
+        });
+      },
       builder: (context, state) {
         if (state is CommentLoadingState) {
           return const Center(
@@ -432,6 +474,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               children: [
                 Expanded(
                   child: CustomScrollView(
+                    controller: commentScrollController,
                     slivers: [
                       if (state is CommentResponseState) ...{
                         state.getComment.fold(
@@ -441,7 +484,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             );
                           },
                           (commentList) {
-                            if (commentList.isEmpty) {
+                            if (commentListLocal.isEmpty) {
                               return const SliverToBoxAdapter(
                                 child: Center(
                                   child: Text('نظری ثبت نشده است'),
@@ -470,11 +513,11 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                (commentList[index]
+                                                (commentListLocal[index]
                                                         .username
                                                         .isEmpty)
                                                     ? 'کاربر'
-                                                    : commentList[index]
+                                                    : commentListLocal[index]
                                                         .username,
                                                 style: const TextStyle(
                                                     fontFamily: 'sb'),
@@ -483,7 +526,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 height: 8.0,
                                               ),
                                               Text(
-                                                commentList[index].text,
+                                                commentListLocal[index].text,
                                               ),
                                             ],
                                           ),
@@ -494,21 +537,23 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         SizedBox(
                                           height: 40,
                                           width: 40,
-                                          child: (commentList[index]
+                                          child: (commentListLocal[index]
                                                   .avatar
                                                   .isEmpty)
                                               ? Image.asset(
                                                   'assets/images/avatar.png')
                                               : CashedImage(
-                                                  imageUrl: commentList[index]
-                                                      .userThumbnailUrl,
+                                                  imageUrl:
+                                                      commentListLocal[index]
+                                                          .userThumbnailUrl,
                                                 ),
                                         ),
                                       ],
                                     ),
                                   );
                                 },
-                                childCount: commentList.length,
+                                addAutomaticKeepAlives: true,
+                                childCount: commentListLocal.length,
                               ),
                             );
                           },
@@ -561,11 +606,19 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                           if (textController.text.isEmpty) {
                             return;
                           }
+
                           context.read<CommentBloc>().add(
                                 CommentPostEvent(
-                                    textController.text, widget.productId),
+                                  textController.text,
+                                  widget.productId,
+                                  widget.page,
+                                ),
                               );
+
+                          // Clear the text field and reset the state
                           textController.text = '';
+                          commentListLocal = [];
+                          pageList = 1;
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

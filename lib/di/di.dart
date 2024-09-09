@@ -68,3 +68,4 @@ void _initRepository() {
   locator.registerFactory<IAuthRepository>(() => AuthRepository());
   locator.registerFactory<ICommentRepository>(() => CommentRepository());
 }
+

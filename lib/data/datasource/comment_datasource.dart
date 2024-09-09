@@ -5,7 +5,7 @@ import 'package:shaparak/util/api_exception.dart';
 import 'package:shaparak/util/auth_manager.dart';
 
 abstract class ICommentDatasource {
-  Future<List<Comment>> getComment(String productid);
+  Future<List<Comment>> getComment(String productid,int page);
   Future<void> postComment(String comment, String productid);
 }
 
@@ -13,10 +13,11 @@ class CommentDatasourceRemote extends ICommentDatasource {
   final Dio _dio = locator.get();
   final String userId = AuthManager.getUserId();
   @override
-  Future<List<Comment>> getComment(String productid) async {
+  Future<List<Comment>> getComment(String productid,int page) async {
     Map<String, String> qParams = {
       'filter': 'product_id="$productid"',
-      'expand': 'user_id'
+      'expand': 'user_id',
+      'page': '$page'
     };
     try {
       var response = await _dio.get('collections/comment/records',

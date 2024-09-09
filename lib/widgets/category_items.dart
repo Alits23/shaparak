@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/product_list/product_list_bloc.dart';
+import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
@@ -60,13 +62,17 @@ class CategoryItems extends StatelessWidget {
         const SizedBox(
           height: 10.0,
         ),
-        Text(
-          category.title,
-          style: const TextStyle(
-            fontFamily: 'sb',
-            fontSize: 14,
-            color: Colors.black,
-          ),
+        ValueListenableBuilder(
+          valueListenable: isLight,
+          builder: (context, value, child) {
+            return Text(
+              category.title,
+              style: TextStyle(
+                  fontFamily: 'sb',
+                  fontSize: 14,
+                  color: isLight.value ? Colors.black : CustomColors.geryDark),
+            );
+          },
         ),
       ],
     );
