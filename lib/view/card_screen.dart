@@ -5,6 +5,7 @@ import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
 import 'package:shaparak/bloc/card/card_state.dart';
 import 'package:shaparak/util/extenstions/int_extensions.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import '../constans/color.dart';
 import '../data/model/basket_item.dart';
@@ -15,7 +16,9 @@ class CardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: BlocBuilder<CardBloc, CardState>(
           builder: (context, state) {
@@ -78,7 +81,8 @@ class ButtonBuy extends StatelessWidget {
               fontFamily: 'sm',
               fontSize: 18.0,
             ),
-            backgroundColor: CustomColors.green,
+            backgroundColor:
+                isLight.value ? CustomColors.green : Colors.lightBlueAccent[50],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -164,7 +168,8 @@ class CardItem extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(left: 44.0, right: 44.0, bottom: 20.0),
       decoration: BoxDecoration(
-        color: CustomColors.white,
+        color:
+            isLight.value ? CustomColors.white : Colors.white.withOpacity(0.8),
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Column(
@@ -181,7 +186,10 @@ class CardItem extends StatelessWidget {
                       children: [
                         Text(
                           basketItem.name,
-                          style: const TextStyle(
+                          style: TextStyle(
+                            color: isLight.value
+                                ? CustomColors.blueIndicator
+                                : Colors.black,
                             fontFamily: 'sb',
                             fontSize: 16.0,
                           ),
@@ -218,6 +226,7 @@ class CardItem extends StatelessWidget {
                               style: TextStyle(
                                 fontFamily: 'sm',
                                 fontSize: 12,
+                                color: Colors.black,
                               ),
                             ),
                             const SizedBox(
@@ -228,6 +237,7 @@ class CardItem extends StatelessWidget {
                               style: const TextStyle(
                                 fontFamily: 'sm',
                                 fontSize: 12,
+                                color: Colors.black,
                               ),
                             ),
                           ],
@@ -276,6 +286,7 @@ class CardItem extends StatelessWidget {
                   style: TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -286,6 +297,7 @@ class CardItem extends StatelessWidget {
                   style: const TextStyle(
                     fontFamily: 'sb',
                     fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
               ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/product_container.dart';
 
@@ -9,10 +11,13 @@ class BestSellerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            const AppBarProductList('پرفروش ترین ها ترین ها'),
+            const AppBarProductList('پرفروش ترین ها'),
             SliverPadding(
               padding:
                   const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20),

@@ -5,6 +5,7 @@ import 'package:shaparak/bloc/product_list/product_list_event.dart';
 import 'package:shaparak/bloc/product_list/product_state.dart';
 import 'package:shaparak/data/model/category.dart';
 import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/widgets/product_container.dart';
 
 import '../constans/color.dart';
@@ -30,7 +31,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return BlocBuilder<ProductListBloc, ProductListState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: CustomColors.backgroundScreenColor,
+          backgroundColor: isLight.value
+              ? CustomColors.backgroundScreenColor
+              : CustomColors.backgroundScreenColorDark,
           body: SafeArea(
             child: CustomScrollView(
               slivers: [

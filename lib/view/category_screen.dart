@@ -5,6 +5,7 @@ import 'package:shaparak/bloc/category/category_event.dart';
 import 'package:shaparak/bloc/category/category_state.dart';
 import 'package:shaparak/bloc/product_list/product_list_bloc.dart';
 import 'package:shaparak/data/model/category.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 
@@ -27,7 +28,9 @@ class _CategoryscreenState extends State<Categoryscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [

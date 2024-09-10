@@ -4,6 +4,7 @@ import 'package:shaparak/bloc/auth/auth_bloc.dart';
 import 'package:shaparak/bloc/auth/auth_event.dart';
 import 'package:shaparak/bloc/auth/auth_state.dart';
 import 'package:shaparak/constans/color.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/login_screen.dart';
 import 'package:shaparak/widgets/bottom_navigation.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
@@ -50,7 +51,9 @@ class _ViewContainerState extends State<ViewContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.white,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: Directionality(
           textDirection: TextDirection.rtl,
@@ -84,7 +87,9 @@ class _ViewContainerState extends State<ViewContainer> {
                         height: 10.0,
                       ),
                       Container(
-                        color: Colors.grey[300],
+                        color: isLight.value
+                            ? Colors.grey[300]
+                            : CustomColors.gery,
                         child: TextField(
                           controller: widget.usernameController,
                           decoration: const InputDecoration(
@@ -119,7 +124,9 @@ class _ViewContainerState extends State<ViewContainer> {
                             height: 10.0,
                           ),
                           Container(
-                            color: Colors.grey[300],
+                            color: isLight.value
+                                ? Colors.grey[300]
+                                : CustomColors.gery,
                             child: TextField(
                               controller: widget.passwordController,
                               obscureText: passwordVisibility,
@@ -167,7 +174,9 @@ class _ViewContainerState extends State<ViewContainer> {
                             height: 10.0,
                           ),
                           Container(
-                            color: Colors.grey[300],
+                            color: isLight.value
+                                ? Colors.grey[300]
+                                : CustomColors.gery,
                             child: TextField(
                               controller: widget.passwordConfirmController,
                               obscureText: passwordVisibility,

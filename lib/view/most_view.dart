@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shaparak/constans/color.dart';
 import 'package:shaparak/data/model/product.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/product_list_screen.dart';
 import 'package:shaparak/widgets/product_container.dart';
 
@@ -11,7 +12,9 @@ class MostviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [

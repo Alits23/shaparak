@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shaparak/util/auth_manager.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/view/login_screen.dart';
 import '../constans/color.dart';
 
@@ -9,7 +10,9 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -83,11 +86,12 @@ class InfoUser extends StatelessWidget {
         ),
         Text(
           AuthManager.getUsername(),
-          style: const TextStyle(
-            fontFamily: 'sb',
-            fontSize: 20,
-            color: Colors.black,
-          ),
+          style: TextStyle(
+              fontFamily: 'sb',
+              fontSize: 20,
+              color: isLight.value
+                  ? CustomColors.backgroundScreenColorDark
+                  : CustomColors.backgroundScreenColor),
         ),
         const SizedBox(
           height: 5,

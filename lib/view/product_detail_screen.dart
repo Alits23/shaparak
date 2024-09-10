@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shaparak/bloc/card/card_bloc.dart';
 import 'package:shaparak/bloc/card/card_event.dart';
@@ -20,6 +21,7 @@ import 'package:shaparak/data/model/variant.dart';
 import 'package:shaparak/data/model/variant_type.dart';
 import 'package:shaparak/di/di.dart';
 import 'package:shaparak/util/snack_bar.dart';
+import 'package:shaparak/view/home_screen.dart';
 import 'package:shaparak/widgets/cashed_image.dart';
 import 'package:shaparak/widgets/loading_animation.dart';
 
@@ -58,7 +60,9 @@ class DetailScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
+      backgroundColor: isLight.value
+          ? CustomColors.backgroundScreenColor
+          : CustomColors.backgroundScreenColorDark,
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
           if (state is ProductLoadingState) {
@@ -91,10 +95,10 @@ class DetailScreenContent extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 20.0),
                         child: Text(
                           parentWidget.product.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'sb',
                             fontSize: 16.0,
-                            color: Colors.black,
+                            color: isLight.value ? Colors.black : Colors.white,
                           ),
                         ),
                       ),
@@ -343,7 +347,9 @@ class _UsersCommentState extends State<UsersComment> {
               isDismissible: true,
               useSafeArea: true,
               showDragHandle: true,
-              backgroundColor: CustomColors.backgroundScreenColor,
+              backgroundColor: isLight.value
+                  ? CustomColors.backgroundScreenColor
+                  : CustomColors.backgroundScreenColorDark,
               context: context,
               builder: (context) {
                 return BlocProvider(
@@ -502,7 +508,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         horizontal: 16.0, vertical: 8.0),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
-                                      color: CustomColors.white,
+                                      color: isLight.value
+                                          ? CustomColors.backgroundScreenColor
+                                          : CustomColors
+                                              .backgroundScreenColorDark,
                                     ),
                                     child: Row(
                                       crossAxisAlignment:
@@ -566,36 +575,42 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 ),
                 Column(
                   children: [
-                    TextField(
-                      controller: textController,
-                      decoration: InputDecoration(
-                        // focusedBorder
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            width: 3.0,
-                            color: CustomColors.blueIndicator,
-                          ),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        // enabledBorder
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            width: 2.0,
-                            color: Colors.black,
-                          ),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextField(
+                        controller: textController,
+                        decoration: InputDecoration(
+                            // focusedBorder
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                width: 3.0,
+                                color: CustomColors.blueIndicator,
+                              ),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            // enabledBorder
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 2.0,
+                                color: isLight.value
+                                    ? Colors.black
+                                    : CustomColors.white,
+                              ),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            hintText: 'نظرتو بده',
+                            hintTextDirection: TextDirection.rtl),
+                        onTap: () {
+                          setState(() {
+                            isKeyboardVisible = true;
+                          });
+                        },
+                        onSubmitted: (value) {
+                          setState(() {
+                            isKeyboardVisible = false;
+                          });
+                        },
                       ),
-                      onTap: () {
-                        setState(() {
-                          isKeyboardVisible = true;
-                        });
-                      },
-                      onSubmitted: (value) {
-                        setState(() {
-                          isKeyboardVisible = false;
-                        });
-                      },
                     ),
                     Padding(
                       padding: EdgeInsets.only(
