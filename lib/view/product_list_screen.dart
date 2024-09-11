@@ -19,6 +19,9 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen> {
+  ValueNotifier<List<Product>> searchList = ValueNotifier([]);
+  List<Product> allProductList = [];
+  TextEditingController searchListController = TextEditingController();
   @override
   void initState() {
     BlocProvider.of<ProductListBloc>(context)
@@ -28,7 +31,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductListBloc, ProductListState>(
+    return BlocConsumer<ProductListBloc, ProductListState>(
+      listener: (context, state) {
+        if (state is ProductListResponseState) {
+          state.productList.fold((l) => null, (r) {
+            searchList.value = r;
+            allProductList = r;
+          });
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: isLight.value
@@ -38,6 +49,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
             child: CustomScrollView(
               slivers: [
                 AppBarProductList(widget.category.title),
+                SearchTextfield(
+                    searchListController: searchListController,
+                    searchList: searchList,
+                    allProductList: allProductList),
                 if (state is ProductListLoadingState) ...{
                   const SliverToBoxAdapter(
                     child: Center(
@@ -51,7 +66,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       child: Center(child: Text(l)),
                     );
                   }, (r) {
-                    return ProductGrid(r);
+                    return ValueListenableBuilder(
+                      valueListenable: searchList,
+                      builder: (context, searchList, child) {
+                        return ProductGrid(searchList);
+                      },
+                    );
                   })
                 }
               ],
@@ -59,6 +79,78 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class SearchTextfield extends StatelessWidget {
+  const SearchTextfield({
+    super.key,
+    required this.searchListController,
+    required this.searchList,
+    required this.allProductList,
+  });
+
+  final TextEditingController searchListController;
+  final ValueNotifier<List<Product>> searchList;
+  final List<Product> allProductList;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 32,
+          right: 32,
+          bottom: 20,
+        ),
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: TextField(
+            controller: searchListController,
+            onChanged: (value) {
+              if (value.isEmpty) {
+                searchList.value = allProductList;
+              }
+              List<Product> tempList = allProductList
+                  .where((element) =>
+                      element.name.toLowerCase().contains(value.toLowerCase()))
+                  .toList();
+              searchList.value = tempList;
+            },
+            cursorColor: CustomColors.blueIndicator,
+            style: const TextStyle(
+              color: CustomColors.backgroundScreenColorDark,
+              fontSize: 16,
+            ),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                    color: CustomColors.backgroundScreenColorDark),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: CustomColors.blueIndicator),
+              ),
+              hintText: 'جستجوی محصول',
+              hintStyle: const TextStyle(
+                color: CustomColors.gery,
+                fontSize: 16,
+              ),
+              suffixIcon: const Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 16,
+                  ),
+                  child: Icon(Icons.search_outlined)),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 12,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

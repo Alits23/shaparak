@@ -74,40 +74,45 @@ class InfoUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: 120,
-          height: 120,
-          child: Image.asset('assets/images/avatar.png'),
-        ),
-        const SizedBox(
-          height: 15,
-        ),
-        Text(
-          AuthManager.getUsername(),
-          style: TextStyle(
-              fontFamily: 'sb',
-              fontSize: 20,
-              color: isLight.value
-                  ? CustomColors.backgroundScreenColorDark
-                  : CustomColors.backgroundScreenColor),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Text(
-          AuthManager.getUserId(),
-          style: const TextStyle(
-            fontFamily: 'sm',
-            fontSize: 14,
-            color: CustomColors.gery,
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-      ],
+    return ValueListenableBuilder(
+      valueListenable: isLight,
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            SizedBox(
+              width: 120,
+              height: 120,
+              child: Image.asset('assets/images/avatar.png'),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+              AuthManager.getUsername(),
+              style: TextStyle(
+                  fontFamily: 'sb',
+                  fontSize: 20,
+                  color: isLight.value
+                      ? CustomColors.backgroundScreenColorDark
+                      : CustomColors.backgroundScreenColor),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              AuthManager.getUserId(),
+              style: const TextStyle(
+                fontFamily: 'sm',
+                fontSize: 14,
+                color: CustomColors.gery,
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+          ],
+        );
+      },
     );
   }
 }
