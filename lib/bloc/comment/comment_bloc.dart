@@ -6,6 +6,7 @@ import 'package:shaparak/data/repository/comment_repository.dart';
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   ICommentRepository repository;
   CommentBloc(this.repository) : super(CommentLoadingState()) {
+    
     on<CommentRequestList>((event, emit) async {
       var getComment = await repository.getComment(event.productId, event.page);
       emit(CommentResponseState(getComment));

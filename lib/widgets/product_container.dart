@@ -155,11 +155,18 @@ class ProductContainer extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    SizedBox(
-                      width: 30.0,
-                      height: 30.0,
-                      child: Image.asset(
-                          'assets/images/icon_right_arrow_cricle.png'),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: Center(
+                          child: SizedBox(
+                            width: 30.0,
+                            height: 30.0,
+                            child: Image.asset(
+                                'assets/images/icon_right_arrow_cricle.png'),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

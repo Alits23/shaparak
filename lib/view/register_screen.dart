@@ -51,9 +51,8 @@ class _ViewContainerState extends State<ViewContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: isLight.value
-          ? CustomColors.backgroundScreenColor
-          : CustomColors.backgroundScreenColorDark,
+      backgroundColor:
+          isLight.value ? Colors.white : CustomColors.backgroundScreenColorDark,
       body: SafeArea(
         child: Directionality(
           textDirection: TextDirection.rtl,

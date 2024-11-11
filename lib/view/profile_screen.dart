@@ -79,10 +79,14 @@ class InfoUser extends StatelessWidget {
       builder: (context, value, child) {
         return Column(
           children: [
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: Image.asset('assets/images/avatar.png'),
+            ClipOval(
+              child: SizedBox(
+                width: 250,
+                height: 250,
+                child: AuthManager.getUsername() == 'alits23'
+                    ? Image.asset('assets/images/profile.jpg')
+                    : Image.asset('assets/images/avatar.png'),
+              ),
             ),
             const SizedBox(
               height: 15,
@@ -91,7 +95,7 @@ class InfoUser extends StatelessWidget {
               AuthManager.getUsername(),
               style: TextStyle(
                   fontFamily: 'sb',
-                  fontSize: 20,
+                  fontSize: 32,
                   color: isLight.value
                       ? CustomColors.backgroundScreenColorDark
                       : CustomColors.backgroundScreenColor),

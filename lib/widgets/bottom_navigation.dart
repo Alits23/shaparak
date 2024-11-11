@@ -34,7 +34,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           // login screen
           BlocProvider(
             create: (context) => AuthBloc(),
-            child: ProfileScreen(),
+            child: const ProfileScreen(),
           ),
           // category screen
           BlocProvider(
@@ -48,7 +48,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
               bloc.add(CardRequestDataEvent());
               return bloc;
             }),
-            child: CardScreen(),
+            child: const CardScreen(),
           ),
           //home screen
           BlocProvider(

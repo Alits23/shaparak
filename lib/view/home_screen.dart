@@ -123,16 +123,7 @@ class AppBar extends StatelessWidget {
               ),
               Image.asset('assets/images/icon_apple_blue.png'),
               const Spacer(),
-              const Expanded(
-                  child: Text(
-                'شاپرک',
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'sb',
-                  color: CustomColors.blueIndicator,
-                ),
-              )),
+              Expanded(child: Image.asset('assets/images/icon_app.png')),
               const Spacer(),
               ValueListenableBuilder(
                 valueListenable: isLight,
